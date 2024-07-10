@@ -1,0 +1,22 @@
+---
+- name: Start autotests
+  hosts: tests
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: "Start stand"
+      shell: "./stand/runner token={{ lookup('env','CI_JOB_TOKEN') }} branch={{ lookup('env','CI_COMMIT_BRANCH') }} mode='test'"
+      register: out
+      failed_when: false
+
+    - name: "Fetch test results"
+      fetch:
+        src: /home/cicd/report.tar.xz
+        dest: ./
+        flat: yes
+
+    - name: Check test result
+      debug:
+        msg: "Check test result"
+      failed_when: out.rc != 0

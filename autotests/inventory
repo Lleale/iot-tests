@@ -1,0 +1,2 @@
+[tests]
+10.24.64.12	ansible_connection=ssh	ansible_port=22	ansible_user=cicd	ansible_ssh_pass=cicd	ansible_sudo_pass=cicd

@@ -1,0 +1,4439 @@
+{
+	"info": {
+		"_postman_id": "6e9bbf51-b851-4d52-8273-b98f363cdac2",
+		"name": "Интеграция (ВК, без уведомлений)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21716455"
+	},
+	"item": [
+		{
+			"name": "Авторизация",
+			"item": [
+				{
+					"name": "Получение анонимного токена",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Токен получен\", function () {",
+									"    postman.setNextRequest(null);",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.json().token).to.be.a(\"string\");",
+									"",
+									"    pm.environment.set(\"vk_anon_token\", pm.response.json().token);",
+									"    postman.setNextRequest();",
+									"});",
+									"",
+									"let vk_login = pm.variables.get(\"vk_login\");",
+									"let vk_password = pm.variables.get(\"vk_password\");",
+									"",
+									"if (!vk_login) {",
+									"    pm.test(\"Не найден логин пользователя в переменной \\\"vk_login\\\"\", () => pm.expect.fail());",
+									"    postman.setNextRequest(null);",
+									"}",
+									"",
+									"if (!vk_password) {",
+									"    pm.test(\"Не найден пароль пользователя в переменной \\\"vk_password\\\"\", () => pm.expect.fail());",
+									"    postman.setNextRequest(null);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "6463690",
+									"description": "ID приложения (в данном случае - \"Маруся\")",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "AGzRpZbRgyxmzAaQrijy",
+									"description": "Этот секрет хранится в приложении. Рано или поздно он может протухнуть.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.vk.com/oauth/get_anonym_token",
+							"protocol": "https",
+							"host": [
+								"api",
+								"vk",
+								"com"
+							],
+							"path": [
+								"oauth",
+								"get_anonym_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Получение access токена",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Токен получен\", function () {",
+									"    postman.setNextRequest(null);",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.json().access_token).to.be.a(\"string\");",
+									"",
+									"    pm.environment.set(\"vk_auth_access_token\", pm.response.json().access_token);",
+									"    postman.setNextRequest();",
+									"})",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{vk_anon_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{vk_login}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{vk_password}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.vk.com/oauth/token",
+							"protocol": "https",
+							"host": [
+								"api",
+								"vk",
+								"com"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Получение токена для приложений",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Токены получены\", function () {",
+									"    postman.setNextRequest(null);",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.json().response.tokens.length).to.be.gte(1);",
+									"    pm.expect(pm.response.json().response.tokens[0].token).to.be.a(\"string\");",
+									"    pm.expect(pm.response.json().response.tokens[0].uuid).to.be.a(\"string\");",
+									"",
+									"    pm.environment.set(\"vk_auth_acc_token\", pm.response.json().response.tokens[0].token);",
+									"    pm.environment.set(\"vk_auth_acc_token_uuid\", pm.response.json().response.tokens[0].uuid);",
+									"    postman.setNextRequest();",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{vk_auth_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}",
+									"type": "text"
+								},
+								{
+									"key": "app_id",
+									"value": "7869124",
+									"type": "text"
+								},
+								{
+									"key": "v",
+									"value": "5.205",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api.vk.com/method/auth.getCredentialsForApp",
+							"protocol": "https",
+							"host": [
+								"api",
+								"vk",
+								"com"
+							],
+							"path": [
+								"method",
+								"auth.getCredentialsForApp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Получение токена для умного дома",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Токен получен\", function () {",
+									"    postman.setNextRequest(null);",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.json().result).to.be.a(\"object\");",
+									"    pm.expect(pm.response.json().result.session_secret).to.be.a(\"string\");",
+									"    pm.expect(pm.response.json().result.session_id).to.be.a(\"string\");",
+									"",
+									"    pm.environment.set(\"vk_session_secret\", pm.response.json().result.session_secret);",
+									"    pm.environment.set(\"vk_session_id\", pm.response.json().result.session_id);",
+									"    postman.setNextRequest();",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://vc.go.mail.ru/account/vk/miniapp_login?device_id={{$isoTimestamp}}&app_id=7869124&uuid={{vk_auth_acc_token_uuid}}&token={{vk_auth_acc_token}}",
+							"protocol": "https",
+							"host": [
+								"vc",
+								"go",
+								"mail",
+								"ru"
+							],
+							"path": [
+								"account",
+								"vk",
+								"miniapp_login"
+							],
+							"query": [
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								},
+								{
+									"key": "app_id",
+									"value": "7869124"
+								},
+								{
+									"key": "uuid",
+									"value": "{{vk_auth_acc_token_uuid}}"
+								},
+								{
+									"key": "token",
+									"value": "{{vk_auth_acc_token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка отслеживаемых устройств",
+			"item": [
+				{
+					"name": "Получение информации о доме",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const referenceProperties = {",
+									"    \"WLK rev A\": [\"event_water_leak\", \"battery_level\"],",
+									"    \"WLK rev B\": [\"event_water_leak\", \"battery_level\"],",
+									"    \"MCT rev A\": [\"event_open\", \"battery_level\"],",
+									"    \"MCT rev B\": [\"event_open\", \"battery_level\"],",
+									"    \"MCT rev C\": [\"event_open\", \"battery_level\"],",
+									"    \"PIR rev A\": [\"event_motion\", \"battery_level\"],",
+									"    \"PIR rev B\": [\"event_motion\", \"battery_level\"],",
+									"    \"PIR rev C\": [\"illumination\", \"event_motion\", \"battery_level\"],",
+									"    \"PLG 01\": [\"on_off\", \"power\", \"amperage\", \"voltage\"],",
+									"};",
+									"",
+									"const trackedDevicesNames = {",
+									"    \"vk_interact_mct_id\": \"Virtual MCT\",",
+									"    \"vk_interact_pir_id\": \"Virtual PIR\",",
+									"    \"vk_interact_wlk_id\": \"Virtual WLK\",",
+									"    \"vk_interact_air_id\": \"Virtual AIR\",",
+									"    \"vk_interact_smk_id\": \"Virtual SMK\",",
+									"    \"vk_interact_rly01_1_id\": \"Virtual RLY 01 Туалет\",",
+									"    \"vk_interact_rly01_2_id\": \"Virtual RLY 01 Ванная\",",
+									"    \"vk_interact_pir_rev_b_id\": \"Virtual PIR Rev B\",",
+									"}",
+									"",
+									"let house = null;",
+									"let trackedRoom = null;",
+									"let interactRoom = null;",
+									"let trackedDevices = [];",
+									"let interactDevices = [];",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Есть комнаты для теста интеграций\", function () {",
+									"    trackedRoomId = pm.response.json().rooms.find(x => x.name == pm.collectionVariables.get(\"vk_tracked_room\"))?.uid;",
+									"    interactRoomId = pm.response.json().rooms.find(x => x.name == pm.collectionVariables.get(\"vk_interact_room\"))?.uid;",
+									"",
+									"    pm.expect(trackedRoomId).to.not.eq(undefined, \"Нет комнаты для отслеживаемых устройств\");",
+									"    trackedDevices = pm.response.json().devices.filter(x => x.room_id == trackedRoomId);",
+									"",
+									"    pm.expect(interactRoomId).to.not.eq(undefined, \"Нет комнаты для манипулируемых устройств\");",
+									"    interactDevices = pm.response.json().devices.filter(x => x.room_id == interactRoomId);",
+									"",
+									"    for (varName in trackedDevicesNames) {",
+									"        let device = interactDevices.find(x => x.name == trackedDevicesNames[varName]);",
+									"        pm.expect(device).to.be.a(\"object\", \"Устройство \\\"\" + trackedDevicesNames[varName] + \"\\\" не найдено\");",
+									"        pm.environment.set(varName, device.uid);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"В доме есть устройства\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    pm.expect(interactDevices).to.have.length.greaterThan(0, \"Нет манипулируемых устройств\");",
+									"});",
+									"",
+									"async function testFullTrackedDevices() {",
+									"    fullTrackedDevices = [];",
+									"    promises = [];",
+									"",
+									"    for (let device of trackedDevices) {",
+									"        let prom = new Promise(resolve => {",
+									"            pm.sendRequest(",
+									"                {",
+									"                    url: pm.variables.replaceIn(\"{{vk_host}}/widget/device/\" + device.uid + \"/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}\"),",
+									"                    method: 'GET',",
+									"                    header: pm.variables.replaceIn('Authorization:Bearer {{vk_session_secret}}')",
+									"                },",
+									"                function (err, res) {",
+									"                    if (err == null && res.code == 200) {",
+									"                        fullTrackedDevices.push(res.json());",
+									"                        resolve();",
+									"                    } else {",
+									"                        pm.test(\"Получена информация об устройстве \\\"\" + device.name + \"\\\"\", () => pm.expect.fail(err ? \"Error: \" + err : \"Status code: \" + res.code));",
+									"                        resolve();",
+									"                    }",
+									"                });",
+									"        });",
+									"",
+									"        promises.push(prom);",
+									"    }",
+									"",
+									"    await Promise.all(promises);",
+									"",
+									"    pm.test(\"У всех отслеживаемых устройств есть требуемые свойства и умения\", function () {",
+									"        pm.expect(fullTrackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"        for (let deviceName of Object.keys(referenceProperties)) {",
+									"            let refProps = referenceProperties[deviceName];",
+									"            let device = fullTrackedDevices.find(x => x.name == deviceName)",
+									"",
+									"            pm.expect(device).to.not.eq(undefined, \"Устройство \\\"\" + deviceName + \"\\\" не найдено\");",
+									"            for (let propName of refProps)",
+									"                pm.expect(device.capabilities.any(x => x.name == \"devices.capabilities.\" + propName)).to.eq(true, \"На устройстве \\\"\" + deviceName + \"\\\" не найдено свойство \\\"\" + propName + \"\\\"\");",
+									"        }",
+									"",
+									"    });",
+									"",
+									"",
+									"    pm.test(\"Заряд батареи всех отслеживаемых устройств больше нуля\", function () {",
+									"        pm.expect(fullTrackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"        for (let device of fullTrackedDevices) {",
+									"            //Проверям, что у устройства действительно должен быть уровень заряда",
+									"            if (referenceProperties[device.name] == undefined || !referenceProperties[device.name].includes(\"battery_level\"))",
+									"                continue;",
+									"",
+									"            let batteryProp = device.capabilities.find(x => x.name == \"devices.capabilities.battery_level\");",
+									"            pm.expect(batteryProp).to.not.eq(undefined, \"У устройства \\\"\" + device.name + \"\\\" отсутствуею уровень заряда батареи\");",
+									"            pm.expect(batteryProp.states[\"battery_level\"]).to.be.a(\"number\", \"Устройства \\\"\" + device.name + \"\\\" не имеет заряда батареи, похоже оно не в сети\");",
+									"            pm.expect(batteryProp.states[\"battery_level\"]).to.be.greaterThan(0, \"Уровень заряда батареи устройства \\\"\" + device.name + \"\\\" равен нулю\");",
+									"        }",
+									"    });",
+									"",
+									"    pm.test(\"Всех отслеживаемые устройства в сети\", function () {",
+									"        pm.expect(fullTrackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"        for (let device of fullTrackedDevices)",
+									"            for (let prop of device.capabilities)",
+									"                for (let propName in prop.states)",
+									"                    pm.expect(prop.states[propName]).to.not.eq(null, \"Свойство \\\"\" + propName + \"\\\" равно null, похоже устройство \\\"\" + device.name + \"\\\" не в сети\");",
+									"    });",
+									"",
+									"}",
+									"",
+									"testFullTrackedDevices();"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/index/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"index",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}",
+									"description": "Не используется, но требуется"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Подготовка контроллера",
+			"item": [
+				{
+					"name": "Проверка настроек контроллера",
+					"item": [
+						{
+							"name": "Получение информации о платформе",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var sdk = require('postman-collection');",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"ctl_port\", pm.response.json().ctlGatePort)",
+											"pm.environment.set(\"ctl_host\", new sdk.Url(pm.globals.get(\"host\")).getHost())"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/info",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"info"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Создание MQTT устройств",
+					"item": [
+						{
+							"name": "Создание реле RLY01",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"postman.setEnvironmentVariable (\"current_time\", Date.now());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{mqtt_sim_host}}/add_node/{{rly01_nodeId}}?brokerLogin={{rly01_nodeId}}&brokerPassword={{rly01_password}}&brokerURL={{ctl_host}}:8883",
+									"host": [
+										"{{mqtt_sim_host}}"
+									],
+									"path": [
+										"add_node",
+										"{{rly01_nodeId}}"
+									],
+									"query": [
+										{
+											"key": "brokerLogin",
+											"value": "{{rly01_nodeId}}"
+										},
+										{
+											"key": "brokerPassword",
+											"value": "{{rly01_password}}"
+										},
+										{
+											"key": "brokerURL",
+											"value": "{{ctl_host}}:8883"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Выключение канала 1 на реле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/position/0",
+									"host": [
+										"{{mqtt_sim_host}}"
+									],
+									"path": [
+										"node",
+										"{{rly01_nodeId}}",
+										"channel",
+										"0",
+										"position",
+										"0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Выключение канала 2 на реле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/position/0",
+									"host": [
+										"{{mqtt_sim_host}}"
+									],
+									"path": [
+										"node",
+										"{{rly01_nodeId}}",
+										"channel",
+										"1",
+										"position",
+										"0"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Создание датчиков",
+					"item": [
+						{
+							"name": "Создание датчика открытия двери",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_mct\",\n    \"nodeId\": 6\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика движения и освещенности (Rev C)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_pir_rev_c\",\n    \"nodeId\": 7\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика протечки",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_wlk\",\n    \"nodeId\": 8\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика климата",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_air_htq01\",\n    \"nodeId\": 9\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика дыма",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_smk\",\n    \"nodeId\": 10\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика движения (Rev B)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_pir\",\n    \"nodeId\": 11\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Настройка виртуального контроллера",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Настройки применены\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"connected\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mac\": \"aa:bb:cc:dd:ee:ff\",\n    \"serial\": \"ZWS0000000\",\n    \"version\": \"1.0.0\",\n    \"model\": \"Z-Wave Simulator\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/ctl/info",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"ctl",
+								"info"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка состояния устройства при отключении контроллера",
+			"item": [
+				{
+					"name": "Отключение контроллера",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Контроллер отключен\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 404]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host\": \"{{ctl_host}}\",\n    \"port\": \"{{ctl_port}}\",\n    \"type\": \"o7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/ctl/disconnect",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"ctl",
+								"disconnect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ожидание недоступности устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"battery_level\": null };",
+									"let stateChanged = false;",
+									"",
+									"for (let property of Object.keys(propertiesCheck)) {",
+									"    let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"    stateChanged = deviceProp.states[property] == propertiesCheck[property];",
+									"}",
+									"",
+									"let tries = 0;",
+									"if(pm.environment.has(\"state_tries\"))",
+									"    tries = pm.environment.get(\"state_tries\");",
+									"if(!stateChanged && tries < pm.variables.get(\"max_state_tries\")) {",
+									"    tries++;",
+									"    pm.environment.set(\"state_tries\", tries);",
+									"    postman.setNextRequest(pm.info.requestId);",
+									"    return;",
+									"}",
+									"",
+									"pm.environment.unset(\"state_tries\");",
+									"pm.test(\"Состояние изменилось\", function () {",
+									"    pm.expect(stateChanged).to.be.true;",
+									"});",
+									"pm.test(\"Status code is 200\", function () {",
+									"pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if(pm.environment.has(\"state_tries\"))",
+									"    setTimeout(function(){}, Number(pm.variables.get(\"state_wait_time\")));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_pir_rev_b_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_pir_rev_b_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Подключение виртуального контроллера",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 15000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host\": \"{{ctl_host}}\",\n    \"port\": {{ctl_port}},\n    \"type\": \"o7\",\n    \"allowMultiple\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/ctl/connect",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"ctl",
+								"connect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ожидание доступности устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheckInv = { \"battery_level\": null };",
+									"let stateChanged = false;",
+									"",
+									"for (let property of Object.keys(propertiesCheckInv)) {",
+									"    let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"    stateChanged = deviceProp.states[property] != propertiesCheckInv[property];",
+									"}",
+									"",
+									"let tries = 0;",
+									"if(pm.environment.has(\"state_tries\"))",
+									"    tries = pm.environment.get(\"state_tries\");",
+									"if(!stateChanged && tries < pm.variables.get(\"max_state_tries\")) {",
+									"    tries++;",
+									"    pm.environment.set(\"state_tries\", tries);",
+									"    postman.setNextRequest(pm.info.requestId);",
+									"    return;",
+									"}",
+									"",
+									"pm.environment.unset(\"state_tries\");",
+									"pm.test(\"Состояние изменилось\", function () {",
+									"    pm.expect(stateChanged).to.be.true;",
+									"});",
+									"pm.test(\"Status code is 200\", function () {",
+									"pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if(pm.environment.has(\"state_tries\"))",
+									"    setTimeout(function(){}, Number(pm.variables.get(\"state_wait_time\")));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_pir_rev_b_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_pir_rev_b_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Изменение параметров 1",
+			"item": [
+				{
+					"name": "Изменение уровня заряда батареи датчика открытия до 10%",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"batteryVoltage\": 2300\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Отключение питания устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/11/power",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"11",
+								"power"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Сработка датчика открытия",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"on\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6/prop/0/openClose",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6",
+								"prop",
+								"0",
+								"openClose"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Сработка датчика движения",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"on\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7/prop/0/motion",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7",
+								"prop",
+								"0",
+								"motion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня освещенности до 10 люкс",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7/prop/0/illumination",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7",
+								"prop",
+								"0",
+								"illumination"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Сработка датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"on\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/8/prop/0/waterLeak",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"8",
+								"prop",
+								"0",
+								"waterLeak"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Сработка датчика дыма",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"on\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/10/prop/0/smoke",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"10",
+								"prop",
+								"0",
+								"smoke"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня летучей органики до 1000 мкг на м^3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 1000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/voc",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"voc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня CO2 до 1000 PPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 1000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/co2",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"co2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня влажности до 100%",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/humidity",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"humidity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение температуры до 40 °C",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 4000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 40\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/temperature",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"temperature"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Включение канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/position/1",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"0",
+								"position",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Включение канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/position/1",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"1",
+								"position",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ожидание изменения параметров 1",
+			"item": [
+				{
+					"name": "Ожидание включения канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"on\": true };",
+									"let stateChanged = false;",
+									"",
+									"for (let property of Object.keys(propertiesCheck)) {",
+									"    let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"    stateChanged = deviceProp.states[property] == propertiesCheck[property];",
+									"}",
+									"",
+									"let tries = 0;",
+									"if(pm.environment.has(\"state_tries\"))",
+									"    tries = pm.environment.get(\"state_tries\");",
+									"if(!stateChanged && tries < pm.variables.get(\"max_state_tries\")) {",
+									"    tries++;",
+									"    pm.environment.set(\"state_tries\", tries);",
+									"    postman.setNextRequest(pm.info.requestId);",
+									"    return;",
+									"}",
+									"",
+									"pm.environment.unset(\"state_tries\");",
+									"pm.test(\"Состояние изменилось\", function () {",
+									"    pm.expect(stateChanged).to.be.true;",
+									"});",
+									"pm.test(\"Status code is 200\", function () {",
+									"pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if(pm.environment.has(\"state_tries\"))",
+									"    setTimeout(function(){}, Number(pm.variables.get(\"state_wait_time\")));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_rly01_2_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_rly01_2_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка параметров 1",
+			"item": [
+				{
+					"name": "Проверка уровня заряда батареи",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"battery_level\": 10 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_mct_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_mct_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка отключения питания устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"battery_level\": null };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство оффлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(null, \"Устройство в сети\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_pir_rev_b_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_pir_rev_b_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика открытия",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"event_open\": \"открыто\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_mct_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_mct_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика движения",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"illumination\": 10, \"event_motion\": \"обнаружено\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_pir_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_pir_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"event_water_leak\": \"протечка\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_wlk_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_wlk_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика дыма",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"event_smoke\": \"обнаружено\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_smk_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_smk_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка параметров датчика климата",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"tvoc\": 1000, \"co2_level\": 1000, \"humidity\": 100, \"temperature\": 40 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_air_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_air_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка канала 1 реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"on\": true };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_rly01_1_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_rly01_1_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка канала 2 реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"on\": true };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_rly01_2_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_rly01_2_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Изменение параметров 2",
+			"item": [
+				{
+					"name": "Изменение уровня заряда батареи датчика открытия до 100%",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"batteryVoltage\": 3200\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Включение питания устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/11/power",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"11",
+								"power"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Нормализация датчика открытия",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6/prop/0/openClose",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6",
+								"prop",
+								"0",
+								"openClose"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Нормализация датчика движения",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7/prop/0/motion",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7",
+								"prop",
+								"0",
+								"motion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня освещенности до 100 люкс",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7/prop/0/illumination",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7",
+								"prop",
+								"0",
+								"illumination"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Нормализация датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/8/prop/0/waterLeak",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"8",
+								"prop",
+								"0",
+								"waterLeak"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Нормализация датчика дыма",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/10/prop/0/smoke",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"10",
+								"prop",
+								"0",
+								"smoke"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня летучей органики до 10 мкг на м^3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/voc",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"voc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня CO2 до 10 PPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/co2",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"co2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня влажности до 40%",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 40\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/humidity",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"humidity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение температуры до 26 °C",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 4000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 26\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/temperature",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"temperature"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Выключение канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/position/0",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"0",
+								"position",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Выключение канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/position/0",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"1",
+								"position",
+								"0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ожидание изменения параметров 2",
+			"item": [
+				{
+					"name": "Ожидание выключения канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"on\": false };",
+									"let stateChanged = false;",
+									"",
+									"for (let property of Object.keys(propertiesCheck)) {",
+									"    let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"    stateChanged = deviceProp.states[property] == propertiesCheck[property];",
+									"}",
+									"",
+									"let tries = 0;",
+									"if (pm.environment.has(\"state_tries\"))",
+									"    tries = pm.environment.get(\"state_tries\");",
+									"if (!stateChanged && tries < pm.variables.get(\"max_state_tries\")) {",
+									"    tries++;",
+									"    pm.environment.set(\"state_tries\", tries);",
+									"    postman.setNextRequest(pm.info.requestId);",
+									"    return;",
+									"}",
+									"",
+									"pm.environment.unset(\"state_tries\");",
+									"pm.test(\"Состояние изменилось\", function () {",
+									"    pm.expect(stateChanged).to.be.true;",
+									"});",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if(pm.environment.has(\"state_tries\"))",
+									"    setTimeout(function(){}, Number(pm.variables.get(\"state_wait_time\")));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_rly01_2_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_rly01_2_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка параметров 2",
+			"item": [
+				{
+					"name": "Проверка уровня заряда батареи",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"battery_level\": 100 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_mct_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_mct_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения питания устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"battery_level\": 100 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_pir_rev_b_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_pir_rev_b_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика открытия",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"event_open\": \"закрыто\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_mct_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_mct_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика движения",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"illumination\": 100, \"event_motion\": \"не обнаружено\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_pir_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_pir_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"event_water_leak\": \"нет протечки\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_wlk_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_wlk_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика дыма",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"event_smoke\": \"не обнаружено\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_smk_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_smk_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка параметров датчика климата",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"tvoc\": 10, \"co2_level\": 10, \"humidity\": 40, \"temperature\": 26 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_air_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_air_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"on\": false };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_rly01_1_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_rly01_1_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"on\": false };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.not.be.eq(null, \"Устройство не в сети\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck)) {",
+									"        let deviceProp = pm.response.json().capabilities.find(x => property in x.states);",
+									"        pm.expect(deviceProp.states[property]).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vk_host}}/widget/device/{{vk_interact_rly01_2_id}}/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"widget",
+								"device",
+								"{{vk_interact_rly01_2_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка управления устройствами",
+			"item": [
+				{
+					"name": "Включение канала 1 на реле (в УД)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actions\": [\n        {\n            \"actions\": [\n                {\n                    \"on\": true\n                }\n            ],\n            \"devices\": [\n                \"{{vk_interact_rly01_1_id}}\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{vk_host}}/actions/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"actions",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}",
+									"description": "Не используется, но требуется"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let expectedState = \"1\";",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Канал реле имеет ожидаемое состояние\", function () {",
+									"    pm.expect(pm.response.text()).to.eq(expectedState);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/state",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"0",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Выключение канала 1 на реле (в УД)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actions\": [\n        {\n            \"actions\": [\n                {\n                    \"on\": false\n                }\n            ],\n            \"devices\": [\n                \"{{vk_interact_rly01_1_id}}\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{vk_host}}/actions/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"actions",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}",
+									"description": "Не используется, но требуется"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let expectedState = \"0\";",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Канал реле имеет ожидаемое состояние\", function () {",
+									"    pm.expect(pm.response.text()).to.eq(expectedState);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/state",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"0",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Включение канала 2 на реле (в УД)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actions\": [\n        {\n            \"actions\": [\n                {\n                    \"on\": true\n                }\n            ],\n            \"devices\": [\n                \"{{vk_interact_rly01_2_id}}\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{vk_host}}/actions/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"actions",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}",
+									"description": "Не используется, но требуется"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let expectedState = \"1\";",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Канал реле имеет ожидаемое состояние\", function () {",
+									"    pm.expect(pm.response.text()).to.eq(expectedState);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/state",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"1",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Выключение канала 2 на реле (в УД)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, 3000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actions\": [\n        {\n            \"actions\": [\n                {\n                    \"on\": false\n                }\n            ],\n            \"devices\": [\n                \"{{vk_interact_rly01_2_id}}\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{vk_host}}/actions/?session_id={{vk_session_id}}&device_id={{$isoTimestamp}}",
+							"host": [
+								"{{vk_host}}"
+							],
+							"path": [
+								"actions",
+								""
+							],
+							"query": [
+								{
+									"key": "session_id",
+									"value": "{{vk_session_id}}"
+								},
+								{
+									"key": "device_id",
+									"value": "{{$isoTimestamp}}",
+									"description": "Не используется, но требуется"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let expectedState = \"0\";",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Канал реле имеет ожидаемое состояние\", function () {",
+									"    pm.expect(pm.response.text()).to.eq(expectedState);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/state",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"1",
+								"state"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Завершение",
+			"item": [
+				{
+					"name": "Отключение контроллера",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Контроллер отключен\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 404]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host\": \"{{ctl_host}}\",\n    \"port\": \"{{ctl_port}}\",\n    \"type\": \"o7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/ctl/disconnect",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"ctl",
+								"disconnect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика открытия двери",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика движения и освещенности (Rev C)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Делете датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/8",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика климата",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика дыма",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/10",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика движения (Rev B)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/11",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{vk_session_secret}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "vk_host",
+			"value": "https://vc.go.mail.ru/smarthouse/api",
+			"type": "string"
+		},
+		{
+			"key": "vk_tracked_room",
+			"value": "Отслеживаемые",
+			"type": "string"
+		},
+		{
+			"key": "vk_interact_room",
+			"value": "Манипулируемые",
+			"type": "string"
+		},
+		{
+			"key": "state_wait_time",
+			"value": "20000",
+			"type": "string"
+		},
+		{
+			"key": "max_state_tries",
+			"value": "25",
+			"type": "string"
+		},
+		{
+			"key": "rly01_nodeId",
+			"value": "cf4950fa-dd45-4e5b-b723-41f39f371709",
+			"type": "string"
+		},
+		{
+			"key": "rly01_password",
+			"value": "556qGC1483YlXHmEbkb53O2K21dj8B1q",
+			"type": "string"
+		}
+	]
+}

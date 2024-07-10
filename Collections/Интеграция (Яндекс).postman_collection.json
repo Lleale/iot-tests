@@ -1,0 +1,5565 @@
+{
+	"info": {
+		"_postman_id": "27056c0c-dd7a-4623-8379-3b7affa03f6c",
+		"name": "Интеграция (Яндекс)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21716455"
+	},
+	"item": [
+		{
+			"name": "Авторизация",
+			"item": [
+				{
+					"name": "Получение CSRF-токена для авторизации",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const csrfRegex = /name=\"csrf_token\" value=\"(?<token>\\S{54})\"/;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"CSRF-токен найден\", function() {",
+									"    let m = csrfRegex.exec(pm.response.text());",
+									"",
+									"    pm.expect(m).to.not.be.null;",
+									"    pm.environment.set(\"yandex_auth_csrf_token\", m[1]);",
+									"});",
+									"",
+									"let yandex_login = pm.variables.get(\"yandex_login\");",
+									"let yandex_password = pm.variables.get(\"yandex_password\");",
+									"",
+									"if (!yandex_login) {",
+									"    pm.test(\"Не найден логин пользователя в переменной \\\"yandex_login\\\"\", () => pm.expect.fail());",
+									"    postman.setNextRequest(null);",
+									"}",
+									"",
+									"if (!yandex_password) {",
+									"    pm.test(\"Не найден пароль пользователя в переменной \\\"yandex_password\\\"\", () => pm.expect.fail());",
+									"    postman.setNextRequest(null);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept": true,
+							"connection": true,
+							"accept-encoding": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": " text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Encoding",
+								"value": " gzip, deflate, br",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": " en-US,en;q=0.9",
+								"type": "text"
+							},
+							{
+								"key": "Cache-Control",
+								"value": " no-cache",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": " keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Pragma",
+								"value": " no-cache",
+								"type": "text"
+							},
+							{
+								"key": "Sec-Fetch-Dest",
+								"value": " document",
+								"type": "text"
+							},
+							{
+								"key": "Sec-Fetch-Mode",
+								"value": " navigate",
+								"type": "text"
+							},
+							{
+								"key": "Sec-Fetch-Site",
+								"value": " none",
+								"type": "text"
+							},
+							{
+								"key": "Sec-Fetch-User",
+								"value": " ?1",
+								"type": "text"
+							},
+							{
+								"key": "Upgrade-Insecure-Requests",
+								"value": " 1",
+								"type": "text"
+							},
+							{
+								"key": "User-Agent",
+								"value": " Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+								"type": "text"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": " \"Not/A)Brand\";v=\"99\", \"Google Chrome\";v=\"115\", \"Chromium\";v=\"115\"",
+								"type": "text"
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": " ?0",
+								"type": "text"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": " \"Linux\"",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://passport.yandex.ru/am?app_platform=android",
+							"protocol": "https",
+							"host": [
+								"passport",
+								"yandex",
+								"ru"
+							],
+							"path": [
+								"am"
+							],
+							"query": [
+								{
+									"key": "app_platform",
+									"value": "android"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Получение TrackID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"TrackID найден\", function() {",
+									"    let trackId = pm.response.json().track_id;",
+									"",
+									"    pm.expect(trackId).to.not.be.null;",
+									"    pm.environment.set(\"yandex_track_id\", trackId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "csrf_token",
+									"value": "{{yandex_auth_csrf_token}}",
+									"type": "text"
+								},
+								{
+									"key": "login",
+									"value": "{{yandex_login}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://passport.yandex.ru/registration-validations/auth/multi_step/start",
+							"protocol": "https",
+							"host": [
+								"passport",
+								"yandex",
+								"ru"
+							],
+							"path": [
+								"registration-validations",
+								"auth",
+								"multi_step",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Отправка пароля",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"ID сессии присутствует\", function() {",
+									"    let sessionId = pm.cookies.get(\"Session_id\");",
+									"",
+									"    pm.expect(sessionId).to.not.be.null;",
+									"    pm.environment.set(\"yandex_session_id\", sessionId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "csrf_token",
+									"value": "{{yandex_auth_csrf_token}}",
+									"type": "text"
+								},
+								{
+									"key": "track_id",
+									"value": "{{yandex_track_id}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{yandex_password}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://passport.yandex.ru/registration-validations/auth/multi_step/commit_password",
+							"protocol": "https",
+							"host": [
+								"passport",
+								"yandex",
+								"ru"
+							],
+							"path": [
+								"registration-validations",
+								"auth",
+								"multi_step",
+								"commit_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Поулчение CSRF-токена для API",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"CSRF-токен найден\", function() {",
+									"    let csrfToken = pm.response.json().storage.csrfToken2;",
+									"",
+									"    pm.expect(csrfToken).to.not.be.null;",
+									"    pm.environment.set(\"yandex_csrf_token\", csrfToken);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://yandex.ru/quasar?storage=1",
+							"protocol": "https",
+							"host": [
+								"yandex",
+								"ru"
+							],
+							"path": [
+								"quasar"
+							],
+							"query": [
+								{
+									"key": "storage",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Подготовка контроллера",
+			"item": [
+				{
+					"name": "Проверка настроек контроллера",
+					"item": [
+						{
+							"name": "Получение информации о платформе",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var sdk = require('postman-collection');",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"ctl_port\", pm.response.json().ctlGatePort)",
+											"pm.environment.set(\"ctl_host\", new sdk.Url(pm.globals.get(\"host\")).getHost())"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/info",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"info"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Создание MQTT устройств",
+					"item": [
+						{
+							"name": "Создание реле RLY01",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"postman.setEnvironmentVariable (\"current_time\", Date.now());"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{mqtt_sim_host}}/add_node/{{rly01_nodeId}}?brokerLogin={{rly01_nodeId}}&brokerPassword={{rly01_password}}&brokerURL={{ctl_host}}:8883",
+									"host": [
+										"{{mqtt_sim_host}}"
+									],
+									"path": [
+										"add_node",
+										"{{rly01_nodeId}}"
+									],
+									"query": [
+										{
+											"key": "brokerLogin",
+											"value": "{{rly01_nodeId}}"
+										},
+										{
+											"key": "brokerPassword",
+											"value": "{{rly01_password}}"
+										},
+										{
+											"key": "brokerURL",
+											"value": "{{ctl_host}}:8883"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Выключение канала 1 на реле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/position/0",
+									"host": [
+										"{{mqtt_sim_host}}"
+									],
+									"path": [
+										"node",
+										"{{rly01_nodeId}}",
+										"channel",
+										"0",
+										"position",
+										"0"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Выключение канала 2 на реле",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/position/0",
+									"host": [
+										"{{mqtt_sim_host}}"
+									],
+									"path": [
+										"node",
+										"{{rly01_nodeId}}",
+										"channel",
+										"1",
+										"position",
+										"0"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Создание датчиков",
+					"item": [
+						{
+							"name": "Создание датчика открытия двери",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_mct\",\n    \"nodeId\": 6\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика движения и освещенности (Rev C)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_pir_rev_c\",\n    \"nodeId\": 7\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика протечки",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_wlk\",\n    \"nodeId\": 8\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика климата",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_air_htq01\",\n    \"nodeId\": 9\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика дыма",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_smk\",\n    \"nodeId\": 10\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Создание датчика движения (Rev B)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Датчик присутствует\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"template\": \"sz_pir\",\n    \"nodeId\": 11\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/devices/add",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"devices",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Подключение контроллера",
+					"item": [
+						{
+							"name": "Настройка виртуального контроллера",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Настройки применены\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+											"    if (pm.response.code == 400) {",
+											"        pm.expect(pm.response.text()).to.include(\"connected\");",
+											"    }",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"mac\": \"aa:bb:cc:dd:ee:ff\",\n    \"serial\": \"ZWS0000000\",\n    \"version\": \"1.0.0\",\n    \"model\": \"Z-Wave Simulator\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/ctl/info",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"ctl",
+										"info"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Подключение виртуального контроллера",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"setTimeout(function () { }, 15000);",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"host\": \"{{ctl_host}}\",\n    \"port\": {{ctl_port}},\n    \"type\": \"o7\",\n    \"allowMultiple\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{zway_ctl_host}}/ctl/connect",
+									"host": [
+										"{{zway_ctl_host}}"
+									],
+									"path": [
+										"ctl",
+										"connect"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Проверка отслеживаемых устройств",
+			"item": [
+				{
+					"name": "Проверка состояний устройств до принудительного обновления",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const delay = (delayInms) => {",
+									"  return new Promise(resolve => setTimeout(resolve, delayInms));",
+									"}",
+									"",
+									"const referenceProperties = {",
+									"    \"ВЛК рев А\": [\"water_leak\", \"battery_level\"],",
+									"    \"ВЛК рев Б\": [\"water_leak\", \"battery_level\"],",
+									"    \"МЦТ рев А\": [\"open\", \"battery_level\"],",
+									"    \"МЦТ рев Б\": [\"open\", \"battery_level\"],",
+									"    \"МЦТ рев Ц\": [\"open\", \"battery_level\"],",
+									"    \"ПИР рев А\": [\"motion\", \"battery_level\"],",
+									"    \"ПИР рев Б\": [\"motion\", \"battery_level\"],",
+									"    \"ПИР рев Ц\": [\"illumination\", \"motion\", \"battery_level\"],",
+									"    \"ПЛГ 01\": [\"power\", \"amperage\", \"voltage\"],",
+									"};",
+									"",
+									"const referenceCapabilities = {",
+									"    \"ПЛГ 01\": [\"on\"],",
+									"};",
+									"",
+									"const trackedDevicesNames = {",
+									"    \"yandex_interact_mct_id\": \"Виртуальный МЦТ\",",
+									"    \"yandex_interact_pir_id\": \"Виртуальный ПИР\",",
+									"    \"yandex_interact_pir_rev_b_id\": \"Виртуальный ПИР рев Б\",",
+									"    \"yandex_interact_wlk_id\": \"Виртуальный ВЛК\",",
+									"    \"yandex_interact_air_id\": \"Виртуальный ЭИР\",",
+									"    \"yandex_interact_smk_id\": \"Виртуальный СМК\",",
+									"    \"yandex_interact_rly01_1_id\": \"Виртуальный РЛЙ 01 Туалет\",",
+									"    \"yandex_interact_rly01_2_id\": \"Виртуальный РЛЙ 01 Ванная\",",
+									"}",
+									"",
+									"let house = null;",
+									"let trackedRoom = null;",
+									"let interactRoom = null;",
+									"let trackedDevices = [];",
+									"let interactDevices = [];",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Есть дом для теста интеграций\", function () {",
+									"    house = pm.response.json().households.find(x => x.name == pm.collectionVariables.get(\"yandex_house_name\"));",
+									"    pm.expect(house).to.not.be.eq(null, \"Нет дома для теста интеграций\");",
+									"    pm.environment.set(\"yandex_household_id\", house.id)",
+									"});",
+									"",
+									"pm.test(\"Есть комнаты для теста интеграций\", function () {",
+									"    trackedRoom = house.rooms.find(x => x.name == pm.collectionVariables.get(\"yandex_tracked_room\"));",
+									"    interactRoom = house.rooms.find(x => x.name == pm.collectionVariables.get(\"yandex_interact_room\"));",
+									"",
+									"    pm.expect(trackedRoom).to.not.eq(undefined, \"Нет комнаты для отслеживаемых устройств\");",
+									"    trackedDevices = trackedRoom.items;",
+									"    pm.environment.set(\"yandex_tracked_room_id\", trackedRoom.id)",
+									"",
+									"    pm.expect(interactRoom).to.not.eq(undefined, \"Нет комнаты для манипулируемых устройств\");",
+									"    interactDevices = interactRoom.items;",
+									"    pm.environment.set(\"yandex_interact_room_id\", interactRoom.id)",
+									"    ",
+									"    for(varName in trackedDevicesNames) {",
+									"        let device = interactDevices.find(x => x.name == trackedDevicesNames[varName]);",
+									"        pm.expect(device).to.be.a(\"object\", \"Устройство \\\"\"+trackedDevicesNames[varName]+\"\\\" не найдено\");",
+									"        pm.environment.set(varName, device.id)",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"В доме есть устройства\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    pm.expect(interactDevices).to.have.length.greaterThan(0, \"Нет манипулируемых устройств\");",
+									"});",
+									"",
+									"pm.test(\"У всех отслеживаемых устройств есть требуемые свойства и умения\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    for (let deviceName of Object.keys(referenceProperties)) {",
+									"        let refProps = referenceProperties[deviceName];",
+									"        let device = trackedDevices.find(x => x.name == deviceName)",
+									"",
+									"        pm.expect(device).to.not.eq(undefined, \"Устройство \\\"\" + deviceName + \"\\\" не найдено\");",
+									"        for (let propName of refProps)",
+									"            pm.expect(device.properties.any(x => x.parameters.instance == propName)).to.eq(true, \"На устройстве \\\"\" + deviceName + \"\\\" не найдено свойство \\\"\" + propName + \"\\\"\");",
+									"    }",
+									"    for (let deviceName of Object.keys(referenceCapabilities)) {",
+									"        let refCaps = referenceCapabilities[deviceName];",
+									"        let device = trackedDevices.find(x => x.name == deviceName)",
+									"",
+									"        pm.expect(device).to.not.eq(undefined, \"Устройство \\\"\" + deviceName + \"\\\" не найдено\");",
+									"        for (let capName of refCaps)",
+									"            pm.expect(device.capabilities.any(x => x.state.instance == capName)).to.eq(true, \"На устройстве \\\"\" + deviceName + \"\\\" не найдено умение \\\"\" + capName + \"\\\"\");",
+									"    }",
+									"",
+									"});",
+									"",
+									"pm.test(\"Свойства всех отслеживаемых устройств обновлялись в последние сутки\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    for (let device of trackedDevices)",
+									"        for (let prop of device.properties)",
+									"            pm.expect(Date.parse(prop.last_updated)).to.be.gte(Date.now() - (24 * 60 * 60 * 1000),",
+									"                \"Свойство \\\"\" + prop.parameters.instance + \"\\\" устройства \\\"\" + device.name + \"\\\" не обновлялось в течении суток\");",
+									"});",
+									"",
+									"pm.test(\"Принудительное обновление всех отслеживаемых устройств прошло успешно\", async function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    for (let device of trackedDevices) {",
+									"        pm.sendRequest({ url: pm.variables.replaceIn(\"{{yandex_host}}/user/devices/\")+device.id, method: 'GET' }, ",
+									"            function (err, res) {",
+									"                pm.expect(err).to.be.null;",
+									"            });",
+									"        await delay(400);",
+									"    }",
+									"",
+									"    setTimeout(function () { }, 2000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка всех устройств после обновления",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const referenceProperties = {",
+									"    \"ВЛК рев А\": [\"water_leak\", \"battery_level\"],",
+									"    \"ВЛК рев Б\": [\"water_leak\", \"battery_level\"],",
+									"    \"МЦТ рев А\": [\"open\", \"battery_level\"],",
+									"    \"МЦТ рев Б\": [\"open\", \"battery_level\"],",
+									"    \"МЦТ рев Ц\": [\"open\", \"battery_level\"],",
+									"    \"ПИР рев А\": [\"motion\", \"battery_level\"],",
+									"    \"ПИР рев Б\": [\"motion\", \"battery_level\"],",
+									"    \"ПИР рев Ц\": [\"illumination\", \"motion\", \"battery_level\"],",
+									"    \"ПЛГ 01\": [\"power\", \"amperage\", \"voltage\"],",
+									"};",
+									"",
+									"const referenceCapabilities = {",
+									"    \"ПЛГ 01\": [\"on\"],",
+									"};",
+									"",
+									"const trackedDevicesNames = {",
+									"    \"yandex_interact_mct_id\": \"Виртуальный МЦТ\",",
+									"    \"yandex_interact_pir_id\": \"Виртуальный ПИР\",",
+									"    \"yandex_interact_pir_rev_b_id\": \"Виртуальный ПИР рев Б\",",
+									"    \"yandex_interact_wlk_id\": \"Виртуальный ВЛК\",",
+									"    \"yandex_interact_air_id\": \"Виртуальный ЭИР\",",
+									"    \"yandex_interact_smk_id\": \"Виртуальный СМК\",",
+									"    \"yandex_interact_rly01_1_id\": \"Виртуальный РЛЙ 01 Туалет\",",
+									"    \"yandex_interact_rly01_2_id\": \"Виртуальный РЛЙ 01 Ванная\",",
+									"}",
+									"",
+									"let house = null;",
+									"let trackedRoom = null;",
+									"let interactRoom = null;",
+									"let trackedDevices = [];",
+									"let interactDevices = [];",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Есть дом для теста интеграций\", function () {",
+									"    house = pm.response.json().households.find(x => x.name == pm.collectionVariables.get(\"yandex_house_name\"));",
+									"    pm.expect(house).to.not.be.eq(null, \"Нет дома для теста интеграций\");",
+									"    pm.environment.set(\"yandex_household_id\", house.id)",
+									"});",
+									"",
+									"pm.test(\"Есть комнаты для теста интеграций\", function () {",
+									"    trackedRoom = house.rooms.find(x => x.name == pm.collectionVariables.get(\"yandex_tracked_room\"));",
+									"    interactRoom = house.rooms.find(x => x.name == pm.collectionVariables.get(\"yandex_interact_room\"));",
+									"",
+									"    pm.expect(trackedRoom).to.not.eq(undefined, \"Нет комнаты для отслеживаемых устройств\");",
+									"    trackedDevices = trackedRoom.items;",
+									"    pm.expect(trackedDevices.length).to.be.gte(1, \"Нет отслеживаемых устройств\");",
+									"    pm.environment.set(\"yandex_tracked_room_id\", trackedRoom.id)",
+									"",
+									"    pm.expect(interactRoom).to.not.eq(undefined, \"Нет комнаты для манипулируемых устройств\");",
+									"    interactDevices = interactRoom.items;",
+									"    pm.expect(interactDevices.length).to.be.gte(1, \"Нет манипулируемых устройств\");",
+									"    pm.environment.set(\"yandex_interact_room_id\", interactRoom.id)",
+									"    ",
+									"    for(varName in trackedDevicesNames) {",
+									"        let device = interactDevices.find(x => x.name == trackedDevicesNames[varName]);",
+									"        pm.expect(device).to.be.a(\"object\", \"Устройство \\\"\"+trackedDevicesNames[varName]+\"\\\" не найдено\");",
+									"        pm.environment.set(varName, device.id)",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"В доме есть устройства\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    pm.expect(interactDevices).to.have.length.greaterThan(0, \"Нет манипулируемых устройств\");",
+									"});",
+									"",
+									"pm.test(\"У всех отслеживаемых устройств есть требуемые свойства и умения\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    for (let deviceName of Object.keys(referenceProperties)) {",
+									"        let refProps = referenceProperties[deviceName];",
+									"        let device = trackedDevices.find(x => x.name == deviceName)",
+									"",
+									"        pm.expect(device).to.not.eq(undefined, \"Устройство \\\"\" + deviceName + \"\\\" не найдено\");",
+									"        for (let propName of refProps)",
+									"            pm.expect(device.properties.any(x => x.parameters.instance == propName)).to.eq(true, \"На устройстве \\\"\" + deviceName + \"\\\" не найдено свойство \\\"\" + propName + \"\\\"\");",
+									"    }",
+									"    for (let deviceName of Object.keys(referenceCapabilities)) {",
+									"        let refCaps = referenceCapabilities[deviceName];",
+									"        let device = trackedDevices.find(x => x.name == deviceName)",
+									"",
+									"        pm.expect(device).to.not.eq(undefined, \"Устройство \\\"\" + deviceName + \"\\\" не найдено\");",
+									"        for (let capName of refCaps)",
+									"            pm.expect(device.capabilities.any(x => x.state.instance == capName)).to.eq(true, \"На устройстве \\\"\" + deviceName + \"\\\" не найдено умение \\\"\" + capName + \"\\\"\");",
+									"    }",
+									"",
+									"});",
+									"",
+									"pm.test(\"Свойства всех отслеживаемых устройств обновлялись в последние сутки\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    for (let device of trackedDevices)",
+									"        for (let prop of device.properties)",
+									"            pm.expect(Date.parse(prop.last_updated)).to.be.gte(Date.now() - (24 * 60 * 60 * 1000),",
+									"                \"Свойство \\\"\" + prop.parameters.instance + \"\\\" устройства \\\"\" + device.name + \"\\\" не обновлялось в течении суток\");",
+									"});",
+									"",
+									"pm.test(\"Заряд батареи всех отслеживаемых устройств больше нуля\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    for (let device of trackedDevices) {",
+									"        //Проверям, что у устройства действительно должен быть уровень заряда",
+									"        if (referenceProperties[device.name] == undefined || !referenceProperties[device.name].includes(\"battery_level\"))",
+									"            continue;",
+									"",
+									"        let batteryProp = device.properties.find(x => x.parameters.instance == \"battery_level\");",
+									"        pm.expect(batteryProp).to.not.eq(undefined, \"У устройства \\\"\" + device.name + \"\\\" отсутствуею уровень заряда батареи\");",
+									"        pm.expect(batteryProp.state.value).to.be.a(\"number\");",
+									"        pm.expect(batteryProp.state.value).to.be.greaterThan(0, \"Уровень заряда батареи устройства \\\"\" + device.name + \"\\\" равен нулю\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Все отслеживаемые устройства в сети\", function () {",
+									"    pm.expect(trackedDevices).to.have.length.greaterThan(0, \"Нет отслеживаемых устройств\");",
+									"    for (let device of trackedDevices) {",
+									"        pm.expect(device.state).to.eq('online', \"Устройство \\\"\" + device.name + \"\\\" не в сети\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка уровня заряда батареи",
+			"item": [
+				{
+					"name": "Изменение уровня заряда батареи датчика открытия до 10%",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"batteryVoltage\": 2300\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка уровня заряда батареи",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"battery_level\": 10 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_mct_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_mct_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня заряда батареи датчика открытия до 100%",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"batteryVoltage\": 3200\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка уровня заряда батареи",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"battery_level\": 100 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_mct_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_mct_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка состояния устройства",
+			"item": [
+				{
+					"name": "Выключение питания устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/11/power",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"11",
+								"power"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка недоступности устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство оффлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.not.be.eq(\"online\", \"Устройство в сети\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_pir_rev_b_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_pir_rev_b_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Включание питания устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/11/power",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"11",
+								"power"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка доступности устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_pir_rev_b_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_pir_rev_b_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Отключение контроллера",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host\": \"{{ctl_host}}\",\n    \"port\": \"{{ctl_port}}\",\n    \"type\": \"o7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/ctl/disconnect",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"ctl",
+								"disconnect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка недоступности устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство оффлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"offline\", \"Устройство в сети\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_pir_rev_b_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_pir_rev_b_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Подключение контроллера",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 15000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host\": \"{{ctl_host}}\",\n    \"port\": {{ctl_port}},\n    \"type\": \"o7\",\n    \"allowMultiple\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/ctl/connect",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"ctl",
+								"connect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка доступности устройства",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_pir_rev_b_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_pir_rev_b_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка датчика открытия",
+			"item": [
+				{
+					"name": "Нормализация датчика открытия (после подключения контроллера)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6/prop/0/openClose",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6",
+								"prop",
+								"0",
+								"openClose"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Сработка датчика открытия",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"on\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6/prop/0/openClose",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6",
+								"prop",
+								"0",
+								"openClose"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика открытия в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_mct_id\");",
+									"let propertiesCheck = { \"open\": \"opened\" };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика открытия после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"open\": \"opened\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_mct_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_mct_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Нормализация датчика открытия",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6/prop/0/openClose",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6",
+								"prop",
+								"0",
+								"openClose"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика открытия в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_mct_id\");",
+									"let propertiesCheck = { \"open\": \"closed\" };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика открытия после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"open\": \"closed\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_mct_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_mct_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка датчика движения",
+			"item": [
+				{
+					"name": "Сработка датчика движения",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"on\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7/prop/0/motion",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7",
+								"prop",
+								"0",
+								"motion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика движения в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_pir_id\");",
+									"let propertiesCheck = { \"motion\": \"detected\" };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика движения после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"motion\": \"detected\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_pir_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_pir_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Нормализация датчика движения",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7/prop/0/motion",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7",
+								"prop",
+								"0",
+								"motion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика движения в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_pir_id\");",
+									"let propertiesCheck = { \"motion\": \"not_detected\" };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика движения после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"motion\": \"not_detected\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_pir_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_pir_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня освещенности до 10 люкс",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7/prop/0/illumination",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7",
+								"prop",
+								"0",
+								"illumination"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка уровня освещенности в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_pir_id\");",
+									"let propertiesCheck = { \"illumination\": 10 };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка уровня освещенности после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"illumination\": 10 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_pir_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_pir_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня освещенности до 100 люкс",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7/prop/0/illumination",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7",
+								"prop",
+								"0",
+								"illumination"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка уровня освещенности в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_pir_id\");",
+									"let propertiesCheck = { \"illumination\": 100 };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка уровня освещенности после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"illumination\": 100 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_pir_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_pir_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка датчика протечки",
+			"item": [
+				{
+					"name": "Сработка датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"on\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/8/prop/0/waterLeak",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"8",
+								"prop",
+								"0",
+								"waterLeak"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика протечки в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_wlk_id\");",
+									"let propertiesCheck = { \"water_leak\": \"leak\" };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика протечки после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"water_leak\": \"leak\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_wlk_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_wlk_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Нормализация датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/8/prop/0/waterLeak",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"8",
+								"prop",
+								"0",
+								"waterLeak"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика протечки в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_wlk_id\");",
+									"let propertiesCheck = { \"water_leak\": \"dry\" };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика протечки после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"water_leak\": \"dry\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_wlk_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_wlk_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка датчика дыма",
+			"item": [
+				{
+					"name": "Сработка датчика дыма",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"on\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/10/prop/0/smoke",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"10",
+								"prop",
+								"0",
+								"smoke"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика дыма в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_smk_id\");",
+									"let propertiesCheck = { \"smoke\": \"detected\" };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка сработки датчика дыма после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"smoke\": \"detected\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_smk_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_smk_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Нормализация датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"off\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/10/prop/0/smoke",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"10",
+								"prop",
+								"0",
+								"smoke"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика дыма в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_smk_id\");",
+									"let propertiesCheck = { \"smoke\": \"not_detected\" };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка нормализации датчика дыма после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"smoke\": \"not_detected\" };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_smk_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_smk_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка датчика климата",
+			"item": [
+				{
+					"name": "Изменение уровня летучей органики до 1000 мкг/м^3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 1000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/voc",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"voc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня CO2 до 1000 PPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 1000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/co2",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"co2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня влажности до 100%",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/humidity",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"humidity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение температуры до 40 °C",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 8000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 40\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/temperature",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"temperature"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка параметров датчика климата в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_air_id\");",
+									"let propertiesCheck = { \"tvoc\": 1000, \"co2_level\": 1000, \"humidity\": 100, \"temperature\": 40 };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка параметров датчика климата после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"tvoc\": 1000, \"co2_level\": 1000, \"humidity\": 100, \"temperature\": 40 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_air_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_air_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня летучей органики до 10 мкг/м^3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/voc",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"voc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня CO2 до 10 PPM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/co2",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"co2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение уровня влажности до 40%",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 40\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/humidity",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"humidity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Изменение температуры до 26 °C",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 8000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": 26\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9/prop/1/temperature",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9",
+								"prop",
+								"1",
+								"temperature"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка параметров датчика климата в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_air_id\");",
+									"let propertiesCheck = { \"tvoc\": 10, \"co2_level\": 10, \"humidity\": 40, \"temperature\": 26 };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения проперти совпадают с ожидаемыми\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(device.properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});",
+									"",
+									"pm.test(\"Проперти обновилось в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).last_updated);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Значения проперти изменились в течении 3-х секунд\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"    {",
+									"        let propertyUpdateTime = Date.parse(device.properties.find(x => x.parameters.instance == property).state_changed_at);",
+									"        let currentTime = pm.environment.get(\"current_time\");",
+									"        pm.expect(propertyUpdateTime).to.be.gte(currentTime - 1000, \"Платформа не сообщила УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"        pm.expect(propertyUpdateTime).to.be.lte(currentTime + 3000, \"Платформа опоздала с сообщением УД Яндекс об изменении проперти \\\"\"+property+\"\\\"\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка параметров датчика климата после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let propertiesCheck = { \"tvoc\": 10, \"co2_level\": 10, \"humidity\": 40, \"temperature\": 26 };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let property of Object.keys(propertiesCheck))",
+									"        pm.expect(pm.response.json().properties.find(x => x.parameters.instance == property).state.value).to.be.eq(propertiesCheck[property], \"Значение проперти \\\"\"+property+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_air_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_air_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Проверка реле",
+			"item": [
+				{
+					"name": "Включение канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/position/1",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"0",
+								"position",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 1 на реле в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_rly01_1_id\");",
+									"let capabilitiesCheck = { \"on\": true };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения умений совпадают с ожидаемыми\", function () {",
+									"    for (let capability of Object.keys(capabilitiesCheck))",
+									"        pm.expect(device.capabilities.find(x => x.state.instance == capability).state.value).to.be.eq(capabilitiesCheck[capability], \"Значение проперти \\\"\"+capability+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 1 на реле после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let capabilitiesCheck = { \"on\": true };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let capabilities of Object.keys(capabilitiesCheck))",
+									"        pm.expect(pm.response.json().capabilities.find(x => x.state.instance == capabilities).state.value).to.be.eq(capabilitiesCheck[capabilities], \"Значение проперти \\\"\"+capabilities+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_1_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_1_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Выключение канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/position/0",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"0",
+								"position",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 1 на реле в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_rly01_1_id\");",
+									"let capabilitiesCheck = { \"on\": false };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения умений совпадают с ожидаемыми\", function () {",
+									"    for (let capability of Object.keys(capabilitiesCheck))",
+									"        pm.expect(device.capabilities.find(x => x.state.instance == capability).state.value).to.be.eq(capabilitiesCheck[capability], \"Значение проперти \\\"\"+capability+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 1 на реле после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let capabilitiesCheck = { \"on\": false };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let capabilities of Object.keys(capabilitiesCheck))",
+									"        pm.expect(pm.response.json().capabilities.find(x => x.state.instance == capabilities).state.value).to.be.eq(capabilitiesCheck[capabilities], \"Значение проперти \\\"\"+capabilities+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_1_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_1_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Включение канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/position/1",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"1",
+								"position",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 2 на реле в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_rly01_2_id\");",
+									"let capabilitiesCheck = { \"on\": true };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения умений совпадают с ожидаемыми\", function () {",
+									"    for (let capability of Object.keys(capabilitiesCheck))",
+									"        pm.expect(device.capabilities.find(x => x.state.instance == capability).state.value).to.be.eq(capabilitiesCheck[capability], \"Значение проперти \\\"\"+capability+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 2 на реле после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let capabilitiesCheck = { \"on\": true };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let capabilities of Object.keys(capabilitiesCheck))",
+									"        pm.expect(pm.response.json().capabilities.find(x => x.state.instance == capabilities).state.value).to.be.eq(capabilitiesCheck[capabilities], \"Значение проперти \\\"\"+capabilities+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_2_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_2_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Выключение канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/position/0",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"1",
+								"position",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 2 на реле в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_rly01_2_id\");",
+									"let capabilitiesCheck = { \"on\": false };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения умений совпадают с ожидаемыми\", function () {",
+									"    for (let capability of Object.keys(capabilitiesCheck))",
+									"        pm.expect(device.capabilities.find(x => x.state.instance == capability).state.value).to.be.eq(capabilitiesCheck[capability], \"Значение проперти \\\"\"+capability+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 2 на реле после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let capabilitiesCheck = { \"on\": false };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let capabilities of Object.keys(capabilitiesCheck))",
+									"        pm.expect(pm.response.json().capabilities.find(x => x.state.instance == capabilities).state.value).to.be.eq(capabilitiesCheck[capabilities], \"Значение проперти \\\"\"+capabilities+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_2_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_2_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Запрос на включение канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "{{yandex_csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actions\": [\n        {\n            \"type\": \"devices.capabilities.on_off\",\n            \"state\": {\n                \"instance\": \"on\",\n                \"value\": true\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_1_id}}/actions",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_1_id}}",
+								"actions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 1 на реле в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_rly01_1_id\");",
+									"let capabilitiesCheck = { \"on\": true };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения умений совпадают с ожидаемыми\", function () {",
+									"    for (let capability of Object.keys(capabilitiesCheck))",
+									"        pm.expect(device.capabilities.find(x => x.state.instance == capability).state.value).to.be.eq(capabilitiesCheck[capability], \"Значение проперти \\\"\"+capability+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 1 на реле после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let capabilitiesCheck = { \"on\": true };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let capabilities of Object.keys(capabilitiesCheck))",
+									"        pm.expect(pm.response.json().capabilities.find(x => x.state.instance == capabilities).state.value).to.be.eq(capabilitiesCheck[capabilities], \"Значение проперти \\\"\"+capabilities+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_1_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_1_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 1 со стороны реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let expectedState = \"1\";",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Канал реле имеет ожидаемое состояние\", function () {",
+									"    pm.expect(pm.response.text()).to.eq(expectedState);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/state",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"0",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Запрос на выключение канала 1 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "{{yandex_csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actions\": [\n        {\n            \"type\": \"devices.capabilities.on_off\",\n            \"state\": {\n                \"instance\": \"on\",\n                \"value\": false\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_1_id}}/actions",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_1_id}}",
+								"actions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 1 на реле в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_rly01_1_id\");",
+									"let capabilitiesCheck = { \"on\": false };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения умений совпадают с ожидаемыми\", function () {",
+									"    for (let capability of Object.keys(capabilitiesCheck))",
+									"        pm.expect(device.capabilities.find(x => x.state.instance == capability).state.value).to.be.eq(capabilitiesCheck[capability], \"Значение проперти \\\"\"+capability+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 1 на реле после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let capabilitiesCheck = { \"on\": false };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let capabilities of Object.keys(capabilitiesCheck))",
+									"        pm.expect(pm.response.json().capabilities.find(x => x.state.instance == capabilities).state.value).to.be.eq(capabilitiesCheck[capabilities], \"Значение проперти \\\"\"+capabilities+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_1_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_1_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 1 со стороны реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let expectedState = \"0\";",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Канал реле имеет ожидаемое состояние\", function () {",
+									"    pm.expect(pm.response.text()).to.eq(expectedState);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/0/state",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"0",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Запрос на включение канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "{{yandex_csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actions\": [\n        {\n            \"type\": \"devices.capabilities.on_off\",\n            \"state\": {\n                \"instance\": \"on\",\n                \"value\": true\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_2_id}}/actions",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_2_id}}",
+								"actions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 2 на реле в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_rly01_2_id\");",
+									"let capabilitiesCheck = { \"on\": true };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения умений совпадают с ожидаемыми\", function () {",
+									"    for (let capability of Object.keys(capabilitiesCheck))",
+									"        pm.expect(device.capabilities.find(x => x.state.instance == capability).state.value).to.be.eq(capabilitiesCheck[capability], \"Значение проперти \\\"\"+capability+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 2 на реле после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let capabilitiesCheck = { \"on\": true };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let capabilities of Object.keys(capabilitiesCheck))",
+									"        pm.expect(pm.response.json().capabilities.find(x => x.state.instance == capabilities).state.value).to.be.eq(capabilitiesCheck[capabilities], \"Значение проперти \\\"\"+capabilities+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_2_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_2_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка включения канала 2 со стороны реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let expectedState = \"1\";",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Канал реле имеет ожидаемое состояние\", function () {",
+									"    pm.expect(pm.response.text()).to.eq(expectedState);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/state",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"1",
+								"state"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Запрос на выключение канала 2 на реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function () { }, 5000);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"current_time\", Math.floor(Date.now()/1000)*1000);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-csrf-token",
+								"value": "{{yandex_csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"actions\": [\n        {\n            \"type\": \"devices.capabilities.on_off\",\n            \"state\": {\n                \"instance\": \"on\",\n                \"value\": false\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_2_id}}/actions",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_2_id}}",
+								"actions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 2 на реле в общем списке",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let deviceId = pm.environment.get(\"yandex_interact_rly01_2_id\");",
+									"let capabilitiesCheck = { \"on\": false };",
+									"",
+									"let device = pm.response.json().households.flatMap(x => x.rooms.flatMap(y => y.items)).find(x => x.id == deviceId);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Значения умений совпадают с ожидаемыми\", function () {",
+									"    for (let capability of Object.keys(capabilitiesCheck))",
+									"        pm.expect(device.capabilities.find(x => x.state.instance == capability).state.value).to.be.eq(capabilitiesCheck[capability], \"Значение проперти \\\"\"+capability+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/v3/user/devices",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"v3",
+								"user",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 2 на реле после обновления состояния",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let capabilitiesCheck = { \"on\": false };",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Устройство онлайн\", function () {",
+									"    pm.expect(pm.response.json().state).to.be.eq(\"online\", \"Устройство не в сети\");",
+									"});",
+									"",
+									"pm.test(\"Значение проперти совпадает с ожидаемым\", function () {",
+									"    for (let capabilities of Object.keys(capabilitiesCheck))",
+									"        pm.expect(pm.response.json().capabilities.find(x => x.state.instance == capabilities).state.value).to.be.eq(capabilitiesCheck[capabilities], \"Значение проперти \\\"\"+capabilities+\"\\\" не совпадает с ожидаемым\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{yandex_host}}/user/devices/{{yandex_interact_rly01_2_id}}",
+							"host": [
+								"{{yandex_host}}"
+							],
+							"path": [
+								"user",
+								"devices",
+								"{{yandex_interact_rly01_2_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Проверка выключения канала 2 со стороны реле",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let expectedState = \"0\";",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Канал реле имеет ожидаемое состояние\", function () {",
+									"    pm.expect(pm.response.text()).to.eq(expectedState);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mqtt_sim_host}}/node/{{rly01_nodeId}}/channel/1/state",
+							"host": [
+								"{{mqtt_sim_host}}"
+							],
+							"path": [
+								"node",
+								"{{rly01_nodeId}}",
+								"channel",
+								"1",
+								"state"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Завершение",
+			"item": [
+				{
+					"name": "Отключение контроллера",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host\": \"{{ctl_host}}\",\n    \"port\": \"{{ctl_port}}\",\n    \"type\": \"o7\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{zway_ctl_host}}/ctl/disconnect",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"ctl",
+								"disconnect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика открытия двери",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/6",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика движения и освещенности (Rev C)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/7",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Делете датчика протечки",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/8",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика климата",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/9",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика дыма",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/10",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Удаление датчика движения (Rev B)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Датчик присутствует\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204, 400])",
+									"    if (pm.response.code == 400) {",
+									"        pm.expect(pm.response.text()).to.include(\"already exists\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{zway_ctl_host}}/devices/11",
+							"host": [
+								"{{zway_ctl_host}}"
+							],
+							"path": [
+								"devices",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "yandex_host",
+			"value": "https://iot.quasar.yandex.ru/m",
+			"type": "string"
+		},
+		{
+			"key": "yandex_house_name",
+			"value": "Тест интеграций",
+			"type": "string"
+		},
+		{
+			"key": "yandex_tracked_room",
+			"value": "Отслеживаемые",
+			"type": "string"
+		},
+		{
+			"key": "yandex_interact_room",
+			"value": "Манипулируемые",
+			"type": "string"
+		},
+		{
+			"key": "rly01_nodeId",
+			"value": "cf4950fa-dd45-4e5b-b723-41f39f371709",
+			"type": "string"
+		},
+		{
+			"key": "rly01_password",
+			"value": "556qGC1483YlXHmEbkb53O2K21dj8B1q",
+			"type": "string"
+		}
+	]
+}

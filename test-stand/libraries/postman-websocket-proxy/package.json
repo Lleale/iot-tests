@@ -1,0 +1,15 @@
+{
+  "name": "postman-websocket-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.1.2",
+    "ws-subprotocol-fix": "file:libraries/ws"
+  }
+}

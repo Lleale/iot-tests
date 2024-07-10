@@ -1,0 +1,15 @@
+{
+    "host": "lab3-test.eltex.loc",
+    "apiPort": 8374,
+    "startZwaySimulate": false,
+    "generateJUnitReport": false,
+
+    "reportPath": "../../../report",
+    "compressReport": true,
+    "reportArchivePath": "../../../report.tar.xz",
+    "saveReportsInHistory": true,
+    "reportsHistoryPath": "../../../report_for_server",
+
+    "collectionPath": "../Collections/Охрана.postman_collection.json",
+    "globalsPath": "../Environments/Workspace.postman_globals.json"
+}

@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "@budibase/handlebars-helpers": "^0.11.8",
+    "commander": "^9.4.1",
+    "es6-template-string": "^1.2.0",
+    "got": "^12.5.1",
+    "iot-simulate-zway": "file:libraries/zway-simulate",
+    "moment-timezone": "^0.5.37",
+    "mongodb": "^5.3.0",
+    "newman": "^5.3.2",
+    "newman-reporter-allure": "file:libraries/newman-reporter-allure",
+    "newman-reporter-htmlextra": "file:libraries/newman-reporter-htmlextra",
+    "newman-reporter-junitfull": "^1.1.1",
+    "postman-websocket-proxy": "file:libraries/postman-websocket-proxy",
+    "postman-mongo-proxy": "file:libraries/postman-mongo-proxy",
+    "strip-ansi-stream": "^2.0.1",
+    "ts-node": "^10.9.1",
+    "zwave-ctl-sim": "file:libraries/zwave-ctl-sim"
+  }
+}

@@ -1,0 +1,1 @@
+ffmpeg -nostdin -re -f lavfi -i testsrc=size={width}x{height}:rate={framerate} -f lavfi -i sine=frequency=1000 -c:v libx264 -preset ultrafast -g 30 -c:a aac -b:v {videobitrate} -b:a {audiobitrate} -vf format=yuv420p -f mpegts -pkt_size 1316 {localtarget}

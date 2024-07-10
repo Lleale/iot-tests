@@ -1,0 +1,1875 @@
+{
+	"serial": "123456789",
+	"manufacturerId": "923",
+	"productId": "11",
+	"productTypeId": "1",
+	"build_num": "6.0.43-b532",
+	"device_id": "1337",
+	"report_topic": "dev/report/1337",
+	"cmd_topic": "dev/cmd/1337",
+	"sys_cmd_topic": "sys/cmd/1337",
+	"sys_event_topic": "sys/event/1337",
+	"props": [
+		{
+			"value": "h264",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "CODEC",
+			"profile": "VIDEO_SETTING",
+			"description": "Video codec",
+			"mqtt_topic": "/video/0/codec",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1920x1080",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "RESOLUTION",
+			"profile": "VIDEO_SETTING",
+			"description": "Video resolution",
+			"mqtt_topic": "/video/0/resolution",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "15",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "60"
+			},
+			"prop_type": "FPS",
+			"profile": "VIDEO_SETTING",
+			"description": "Framerate",
+			"mqtt_topic": "/video/0/fps",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "600",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "BITRATE",
+			"profile": "VIDEO_SETTING",
+			"description": "Video bitrate",
+			"mqtt_topic": "/video/0/bitrate",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "main",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "PROFILE",
+			"profile": "VIDEO_SETTING",
+			"description": "Codec Profile",
+			"mqtt_topic": "/video/0/profile",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "900",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "MAX_BITRATE",
+			"profile": "VIDEO_SETTING",
+			"description": "Max video bitrate",
+			"mqtt_topic": "/video/0/maxbitrate",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "cqp",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RC_MODE",
+			"profile": "VIDEO_SETTING",
+			"description": "Bitrate control mode",
+			"mqtt_topic": "/video/0/rcmode",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "38",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP",
+			"profile": "VIDEO_SETTING",
+			"description": "Quantization parameter",
+			"mqtt_topic": "/video/0/qp",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "34",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP_MIN",
+			"profile": "VIDEO_SETTING",
+			"description": "Minimum quantization parameter",
+			"mqtt_topic": "/video/0/qpmin",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "51",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP_MAX",
+			"profile": "VIDEO_SETTING",
+			"description": "Maximum quantization parameter",
+			"mqtt_topic": "/video/0/qpmax",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "42",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "MAX_PSNR",
+			"profile": "VIDEO_SETTING",
+			"description": "Maximum peak signal/noise ratio",
+			"mqtt_topic": "/video/0/maxpsnr",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "h264",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "CODEC",
+			"profile": "VIDEO_SETTING",
+			"description": "Video codec",
+			"mqtt_topic": "/video/1/codec",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "1280x720",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "RESOLUTION",
+			"profile": "VIDEO_SETTING",
+			"description": "Video resolution",
+			"mqtt_topic": "/video/1/resolution",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "15",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "60"
+			},
+			"prop_type": "FPS",
+			"profile": "VIDEO_SETTING",
+			"description": "Framerate",
+			"mqtt_topic": "/video/1/fps",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "300",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "BITRATE",
+			"profile": "VIDEO_SETTING",
+			"description": "Video bitrate",
+			"mqtt_topic": "/video/1/bitrate",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "main",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "PROFILE",
+			"profile": "VIDEO_SETTING",
+			"description": "Codec Profile",
+			"mqtt_topic": "/video/1/profile",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "600",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "MAX_BITRATE",
+			"profile": "VIDEO_SETTING",
+			"description": "Max video bitrate",
+			"mqtt_topic": "/video/1/maxbitrate",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "cqp",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RC_MODE",
+			"profile": "VIDEO_SETTING",
+			"description": "Bitrate control mode",
+			"mqtt_topic": "/video/1/rcmode",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "38",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP",
+			"profile": "VIDEO_SETTING",
+			"description": "Quantization parameter",
+			"mqtt_topic": "/video/1/qp",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "34",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP_MIN",
+			"profile": "VIDEO_SETTING",
+			"description": "Minimum quantization parameter",
+			"mqtt_topic": "/video/1/qpmin",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "51",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP_MAX",
+			"profile": "VIDEO_SETTING",
+			"description": "Maximum quantization parameter",
+			"mqtt_topic": "/video/1/qpmax",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "42",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "MAX_PSNR",
+			"profile": "VIDEO_SETTING",
+			"description": "Maximum peak signal/noise ratio",
+			"mqtt_topic": "/video/1/maxpsnr",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "h264",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "CODEC",
+			"profile": "VIDEO_SETTING",
+			"description": "Video codec",
+			"mqtt_topic": "/video/2/codec",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "640x360",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "RESOLUTION",
+			"profile": "VIDEO_SETTING",
+			"description": "Video resolution",
+			"mqtt_topic": "/video/2/resolution",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "15",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "60"
+			},
+			"prop_type": "FPS",
+			"profile": "VIDEO_SETTING",
+			"description": "Framerate",
+			"mqtt_topic": "/video/2/fps",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "190",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "BITRATE",
+			"profile": "VIDEO_SETTING",
+			"description": "Video bitrate",
+			"mqtt_topic": "/video/2/bitrate",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "baseline",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "PROFILE",
+			"profile": "VIDEO_SETTING",
+			"description": "Codec Profile",
+			"mqtt_topic": "/video/2/profile",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "400",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "MAX_BITRATE",
+			"profile": "VIDEO_SETTING",
+			"description": "Max video bitrate",
+			"mqtt_topic": "/video/2/maxbitrate",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "cqp",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RC_MODE",
+			"profile": "VIDEO_SETTING",
+			"description": "Bitrate control mode",
+			"mqtt_topic": "/video/2/rcmode",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "38",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP",
+			"profile": "VIDEO_SETTING",
+			"description": "Quantization parameter",
+			"mqtt_topic": "/video/2/qp",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "34",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP_MIN",
+			"profile": "VIDEO_SETTING",
+			"description": "Minimum quantization parameter",
+			"mqtt_topic": "/video/2/qpmin",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "51",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "QP_MAX",
+			"profile": "VIDEO_SETTING",
+			"description": "Maximum quantization parameter",
+			"mqtt_topic": "/video/2/qpmax",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "42",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "MAX_PSNR",
+			"profile": "VIDEO_SETTING",
+			"description": "Maximum peak signal/noise ratio",
+			"mqtt_topic": "/video/2/maxpsnr",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "RAW",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "MIC_CODEC",
+			"profile": "AUDIO_SETTING",
+			"description": "Microphone audio codec",
+			"mqtt_topic": "/audio/mic/codec",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "RAW",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "20"
+			},
+			"prop_type": "SPK_CODEC",
+			"profile": "AUDIO_SETTING",
+			"description": "Speaker audio codec",
+			"mqtt_topic": "/audio/spk/codec",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "MIC_ONFF",
+			"profile": "AUDIO_SETTING",
+			"description": "Microphone switch",
+			"mqtt_topic": "/audio/mic/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "SPK_ONFF",
+			"profile": "AUDIO_SETTING",
+			"description": "Speaker switch",
+			"mqtt_topic": "/audio/spk/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "48000",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "2147483647"
+			},
+			"prop_type": "MIC_SAMPLE_RATE",
+			"profile": "AUDIO_SETTING",
+			"description": "Microphone samplerate",
+			"mqtt_topic": "/audio/mic/samplerate",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "16000",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "2147483647"
+			},
+			"prop_type": "SPK_SAMPLE_RATE",
+			"profile": "AUDIO_SETTING",
+			"description": "Speaker samplerate",
+			"mqtt_topic": "/audio/spk/samplerate",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "1",
+				"max": "2"
+			},
+			"prop_type": "MIC_MODE",
+			"profile": "AUDIO_SETTING",
+			"description": "Microphone audio mode: mono/stereo",
+			"mqtt_topic": "/audio/mic/mode",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "1",
+				"max": "2"
+			},
+			"prop_type": "SPK_MODE",
+			"profile": "AUDIO_SETTING",
+			"description": "Speaker audio mode: mono/stereo",
+			"mqtt_topic": "/audio/spk/mode",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "90",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "100"
+			},
+			"prop_type": "MIC_VOLUME",
+			"profile": "AUDIO_SETTING",
+			"description": "Microphone codec profile",
+			"mqtt_topic": "/audio/mic/volume",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "90",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "100"
+			},
+			"prop_type": "SPK_VOLUME",
+			"profile": "AUDIO_SETTING",
+			"description": "Speaker codec profile",
+			"mqtt_topic": "/audio/spk/volume",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "128",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "512"
+			},
+			"prop_type": "BRIGHT",
+			"profile": "IMAGE_SETTING",
+			"description": "Brightness setting",
+			"mqtt_topic": "/image/bright",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "128",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "512"
+			},
+			"prop_type": "CONTRAST",
+			"profile": "IMAGE_SETTING",
+			"description": "Contrast setting",
+			"mqtt_topic": "/image/contrast",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "128",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "512"
+			},
+			"prop_type": "SHARP",
+			"profile": "IMAGE_SETTING",
+			"description": "Sharpness setting",
+			"mqtt_topic": "/image/sharp",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "128",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "512"
+			},
+			"prop_type": "SATURATION",
+			"profile": "IMAGE_SETTING",
+			"description": "Saturation setting",
+			"mqtt_topic": "/image/saturation",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "off",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "ANTIFLICKER",
+			"profile": "IMAGE_SETTING",
+			"description": "Antiflicker mode",
+			"mqtt_topic": "/image/antiflicker",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "512"
+			},
+			"prop_type": "HILIGHT",
+			"profile": "IMAGE_SETTING",
+			"description": "Hilight deprivation level",
+			"mqtt_topic": "/image/hilight",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "128",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "512"
+			},
+			"prop_type": "DEFOG_STRENGTH",
+			"profile": "IMAGE_SETTING",
+			"description": "Defog stregth",
+			"mqtt_topic": "/image/defog/strength",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "DEFOG_ONOFF",
+			"profile": "IMAGE_SETTING",
+			"description": "Defog state",
+			"mqtt_topic": "/image/defog/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "auto",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "WB_MODE",
+			"profile": "IMAGE_SETTING",
+			"description": "White balance mode",
+			"mqtt_topic": "/image/wb/mode",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "434",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "512"
+			},
+			"prop_type": "WB_RGAIN",
+			"profile": "IMAGE_SETTING",
+			"description": "White balance red gain",
+			"mqtt_topic": "/image/wb/rgain",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "642",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "512"
+			},
+			"prop_type": "WB_BGAIN",
+			"profile": "IMAGE_SETTING",
+			"description": "White balance blue gain",
+			"mqtt_topic": "/image/wb/bgain",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "norm",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "ORIENTATION",
+			"profile": "IMAGE SETTING",
+			"description": "Image orientation mode",
+			"mqtt_topic": "/image/orientation",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "auto",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "IR_ONOFF",
+			"profile": "IR",
+			"description": "IR switch",
+			"mqtt_topic": "/ir/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTMP",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP stream switch",
+			"mqtt_topic": "/stream/0/rtmp/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "rtmps://10.24.72.57:1936/cam/stream-111",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RTMP_URL",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP Stream URL",
+			"mqtt_topic": "/stream/0/rtmp/url",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTMP_AUDIO",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP stream audio switch",
+			"mqtt_topic": "/stream/0/rtmp/audio",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTSP",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP stream switch",
+			"mqtt_topic": "/stream/0/rtsp/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "rtsp://192.168.1.2/main",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RTSP_URL",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP Stream URL",
+			"mqtt_topic": "/stream/0/rtsp/url",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTSP_AUDIO",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP stream audio switch",
+			"mqtt_topic": "/stream/0/rtsp/audio",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTMP",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP stream switch",
+			"mqtt_topic": "/stream/1/rtmp/onoff",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "rtmps://10.24.72.57:1936/cam/stream-222",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RTMP_URL",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP Stream URL",
+			"mqtt_topic": "/stream/1/rtmp/url",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTMP_AUDIO",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP stream audio switch",
+			"mqtt_topic": "/stream/1/rtmp/audio",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTSP",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP stream switch",
+			"mqtt_topic": "/stream/1/rtsp/onoff",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "rtsp://192.168.1.2/sub",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RTSP_URL",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP Stream URL",
+			"mqtt_topic": "/stream/1/rtsp/url",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTSP_AUDIO",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP stream audio switch",
+			"mqtt_topic": "/stream/1/rtsp/audio",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTMP",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP stream switch",
+			"mqtt_topic": "/stream/2/rtmp/onoff",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "rtmp://10.24.72.57:1937/camera/stream-333",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RTMP_URL",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP Stream URL",
+			"mqtt_topic": "/stream/2/rtmp/url",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTMP_AUDIO",
+			"profile": "STREAM_SETTING",
+			"description": "RTMP stream audio switch",
+			"mqtt_topic": "/stream/2/rtmp/audio",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTSP",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP stream switch",
+			"mqtt_topic": "/stream/2/rtsp/onoff",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "rtsp://192.168.1.2/mob",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RTSP_URL",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP Stream URL",
+			"mqtt_topic": "/stream/2/rtsp/url",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RTSP_AUDIO",
+			"profile": "STREAM_SETTING",
+			"description": "RTSP stream audio switch",
+			"mqtt_topic": "/stream/2/rtsp/audio",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "DETECTION_ONOFF",
+			"profile": "DETECTION",
+			"description": "Movement detection state",
+			"mqtt_topic": "/detection/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0-47",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "DETECTION_CELLS",
+			"profile": "DETECTION",
+			"description": "Movement detection cells",
+			"mqtt_topic": "/detection/cells",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "8,6",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "DETECTION_XY",
+			"profile": "DETECTION",
+			"description": "Movement detection cells num",
+			"mqtt_topic": "/detection/xy",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "DETECTION_EVENT",
+			"profile": "DETECTION",
+			"description": "Movement detection event",
+			"mqtt_topic": "/detection/event",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "90",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_DISK_USAGE",
+			"profile": "RECORD",
+			"description": "Record disk usage limit",
+			"mqtt_topic": "/sdcard/diskusage",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "removed",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_DISK_STATE",
+			"profile": "RECORD",
+			"description": "Record disk state",
+			"mqtt_topic": "/sdcard/state",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_DISK_EVENT",
+			"profile": "RECORD",
+			"description": "Record disk events",
+			"mqtt_topic": "/sdcard/event",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_RESET",
+			"profile": "RECORD",
+			"description": "Record storage reset",
+			"mqtt_topic": "/record/reset",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "mon:0-23,tue:0-23,wed:0-23,thu:0-23,fri:0-23,sat:0-23,sun:0-23",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_SCHEDULE",
+			"profile": "RECORD",
+			"description": "Record schedule",
+			"mqtt_topic": "/record/schedule",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_RANGES",
+			"profile": "RECORD",
+			"description": "Local records ranges",
+			"mqtt_topic": "/record/ranges",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_DAYS",
+			"profile": "RECORD",
+			"description": "Local records available dates",
+			"mqtt_topic": "/record/days",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_START",
+			"profile": "RECORD",
+			"description": "Start event record",
+			"mqtt_topic": "/record/start",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "cont",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_MODE",
+			"profile": "RECORD",
+			"description": "Record mode",
+			"mqtt_topic": "/record/0/mode",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_AUDIO",
+			"profile": "RECORD",
+			"description": "Record audio on/off",
+			"mqtt_topic": "/record/0/audio",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_LOOP",
+			"profile": "RECORD",
+			"description": "Record loop on/off",
+			"mqtt_topic": "/record/0/loop",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1800",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_LEN",
+			"profile": "RECORD",
+			"description": "Record len",
+			"mqtt_topic": "/record/0/len",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "off",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_MODE",
+			"profile": "RECORD",
+			"description": "Record mode",
+			"mqtt_topic": "/record/2/mode",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_AUDIO",
+			"profile": "RECORD",
+			"description": "Record audio on/off",
+			"mqtt_topic": "/record/2/audio",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_LOOP",
+			"profile": "RECORD",
+			"description": "Record loop on/off",
+			"mqtt_topic": "/record/2/loop",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "60",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_LEN",
+			"profile": "RECORD",
+			"description": "Record len",
+			"mqtt_topic": "/record/2/len",
+			"prop_type_id": "2"
+		},
+		{
+			"value": "event",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "RECORD_MODE",
+			"profile": "RECORD",
+			"description": "Record mode",
+			"mqtt_topic": "/record/1/mode",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_AUDIO",
+			"profile": "RECORD",
+			"description": "Record audio on/off",
+			"mqtt_topic": "/record/1/audio",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_LOOP",
+			"profile": "RECORD",
+			"description": "Record loop on/off",
+			"mqtt_topic": "/record/1/loop",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "300",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "RECORD_LEN",
+			"profile": "RECORD",
+			"description": "Record len",
+			"mqtt_topic": "/record/1/len",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "PLAYER_NAME",
+			"profile": "PLAYER",
+			"description": "Stored record name to play",
+			"mqtt_topic": "/player/name",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "PLAYER_TYPE",
+			"profile": "PLAYER",
+			"description": "Stored record type to play (cont/event)",
+			"mqtt_topic": "/player/type",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "PROP_PLAYER_START_TIME",
+			"profile": "PLAYER",
+			"description": "Stored record start time to play (microseconds)",
+			"mqtt_topic": "/player/start_time",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "PROP_PLAYER_END_TIME",
+			"profile": "PLAYER",
+			"description": "Stored record end time to play (microseconds)",
+			"mqtt_topic": "/player/end_time",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "PROP_PLAYER_START",
+			"profile": "PLAYER",
+			"description": "Start player",
+			"mqtt_topic": "/player/start",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "PROP_PLAYER_STOP",
+			"profile": "PLAYER",
+			"description": "Stop player",
+			"mqtt_topic": "/player/stop",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "255",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "255"
+			},
+			"prop_type": "OSD_ALPHA",
+			"profile": "OSD",
+			"description": "OSD opacity",
+			"mqtt_topic": "/osd/0/alpha",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "date",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "100"
+			},
+			"prop_type": "OSD_DATA",
+			"profile": "OSD",
+			"description": "OSD data ",
+			"mqtt_topic": "/osd/0/data",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "OSD_ENABLE",
+			"profile": "OSD",
+			"description": "OSD on/off",
+			"mqtt_topic": "/osd/0/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "255",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "255"
+			},
+			"prop_type": "OSD_ALPHA",
+			"profile": "OSD",
+			"description": "OSD opacity",
+			"mqtt_topic": "/osd/1/alpha",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "100"
+			},
+			"prop_type": "OSD_DATA",
+			"profile": "OSD",
+			"description": "OSD data ",
+			"mqtt_topic": "/osd/1/data",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "OSD_ENABLE",
+			"profile": "OSD",
+			"description": "OSD on/off",
+			"mqtt_topic": "/osd/1/onoff",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "10",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "100"
+			},
+			"prop_type": "OSD_X",
+			"profile": "OSD",
+			"description": "OSD x coordinate",
+			"mqtt_topic": "/osd/0/x",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "10",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "100"
+			},
+			"prop_type": "OSD_Y",
+			"profile": "OSD",
+			"description": "OSD y coordinate",
+			"mqtt_topic": "/osd/0/y",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "10",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "100"
+			},
+			"prop_type": "OSD_X",
+			"profile": "OSD",
+			"description": "OSD x coordinate",
+			"mqtt_topic": "/osd/1/x",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "85",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "100"
+			},
+			"prop_type": "OSD_Y",
+			"profile": "OSD",
+			"description": "OSD y coordinate",
+			"mqtt_topic": "/osd/1/y",
+			"prop_type_id": "1"
+		},
+		{
+			"value": "http://lab1.eltex.loc:4001/camera/upgrade.ota",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "OTA_URL",
+			"profile": "OTA_SETTING",
+			"description": "URL update",
+			"mqtt_topic": "/ota/url",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "OTA_UPGRADE",
+			"profile": "OTA_SETTING",
+			"description": "Update command",
+			"mqtt_topic": "/ota/upgrade",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "2",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "ACTIVE_IFACE",
+			"profile": "NET_CONFIG",
+			"description": "Network active ifaces",
+			"mqtt_topic": "/net/ifaces",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "INTERFACE_ENABLE",
+			"profile": "NET_CONFIG",
+			"description": "Network interface enable",
+			"mqtt_topic": "/net/iface/0",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "RG-54_TEST2.4G",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "50"
+			},
+			"prop_type": "SSID",
+			"profile": "NET_CONFIG",
+			"description": "Set ssid",
+			"mqtt_topic": "/net/iface/0/ssid",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "12345678",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "50"
+			},
+			"prop_type": "KEY",
+			"profile": "NET_CONFIG",
+			"description": "Set ssid key",
+			"mqtt_topic": "/net/iface/0/key",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "DHCP",
+			"profile": "NET_CONFIG",
+			"description": "DHCP service switch",
+			"mqtt_topic": "/net/dhcp/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "192.168.1.10",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "IP",
+			"profile": "NET_CONFIG",
+			"description": "Set static ip",
+			"mqtt_topic": "/net/static/ip",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "192.168.1.1",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "GATEWAY",
+			"profile": "NET_CONFIG",
+			"description": "Set static gateway",
+			"mqtt_topic": "/net/static/gw",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "255.255.255.0",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "NETMASK",
+			"profile": "NET_CONFIG",
+			"description": "Set static netmask",
+			"mqtt_topic": "/net/static/nm",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "http://storage.server.com",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "URL_STORAGE",
+			"profile": "CAMERA_CONFIG",
+			"description": "URL Storage",
+			"mqtt_topic": "/conf/url",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "3"
+			},
+			"prop_type": "ACTION",
+			"profile": "CAMERA_CONFIG",
+			"description": "Storage download, upload, reset, save",
+			"mqtt_topic": "/conf/action",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "MOTOR",
+			"profile": "PT",
+			"description": "Motor manager",
+			"mqtt_topic": "/motor",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "1945,410",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "STATUS_MOTOR",
+			"profile": "PT",
+			"description": "Motor status",
+			"mqtt_topic": "/motor/position",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "0"
+			},
+			"prop_type": "ONVIF_ONOFF",
+			"profile": "ONVIF",
+			"description": "Onvif switch",
+			"mqtt_topic": "/onvif/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "STATUS_UPGRADE",
+			"profile": "CAMERA_STATUS",
+			"description": "OTA upgrade status",
+			"mqtt_topic": "/stat/ota/upgrade",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "STATUS_RTSP",
+			"profile": "CAMERA_STATUS",
+			"description": "RTSP stream status",
+			"mqtt_topic": "/stat/stream/rtsp",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "STATUS_RTMP",
+			"profile": "CAMERA_STATUS",
+			"description": "RTMP stream status",
+			"mqtt_topic": "/stat/stream/rtmp",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "STATUS_INTERFACE",
+			"profile": "CAMERA_STATUS",
+			"description": "Network interface status",
+			"mqtt_topic": "/stat/net/iface/0",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "STATUS_TX",
+			"profile": "CAMERA_STATUS",
+			"description": "Tx counter",
+			"mqtt_topic": "/stat/net/iface/0/txb",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "STATUS_RX",
+			"profile": "CAMERA_STATUS",
+			"description": "Rx counter",
+			"mqtt_topic": "/stat/net/iface/0/rxb",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "MODE",
+			"profile": "TIME",
+			"description": "Set time mode. NTP/user time",
+			"mqtt_topic": "/time/mode",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "2147483647"
+			},
+			"prop_type": "SETUP_TIME",
+			"profile": "TIME",
+			"description": "Set time",
+			"mqtt_topic": "/time/set",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "Fri Feb 16 17:37:15 2024",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "GET_TIME",
+			"profile": "TIME",
+			"description": "Get time",
+			"mqtt_topic": "/time/get",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "Asia/Novosibirsk",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "TIMEZONE",
+			"profile": "TIME",
+			"description": "Set timezone",
+			"mqtt_topic": "/time/tz",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "ru.pool.ntp.org",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "NTP_SERVER",
+			"profile": "TIME",
+			"description": "Set ntp server url",
+			"mqtt_topic": "/time/ntpserver",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "SSID_SCAN",
+			"profile": "TIME",
+			"description": "SSID scaner",
+			"mqtt_topic": "/ssid/scan",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "SSDP_ENABLE",
+			"profile": "SSDP",
+			"description": "SSDP monitor state",
+			"mqtt_topic": "/ssdp/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "SSDP_USN",
+			"profile": "SSDP",
+			"description": "SSDP monitor USN",
+			"mqtt_topic": "/ssdp/usn",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "-2147483648",
+				"max": "2147483647"
+			},
+			"prop_type": "SYSLOG_ENABLE",
+			"profile": "SYSLOG",
+			"description": "Remote logging state",
+			"mqtt_topic": "/syslog/onoff",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "",
+			"value_type": "string",
+			"value_info": {
+			"max_length": "4294967295"
+			},
+			"prop_type": "SYSLOG_URL",
+			"profile": "SYSLOG",
+			"description": "Remote logging url",
+			"mqtt_topic": "/syslog/url",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "RESET",
+			"profile": "RESET",
+			"description": "RESET",
+			"mqtt_topic": "/reset",
+			"prop_type_id": "0"
+		},
+		{
+			"value": "0",
+			"value_type": "int",
+			"value_info": {
+				"min": "0",
+				"max": "1"
+			},
+			"prop_type": "REBOOT",
+			"profile": "REBOOT",
+			"description": "REBOOT",
+			"mqtt_topic": "/reboot",
+			"prop_type_id": "0"
+		}
+	],
+	"users": [
+		{
+			"login": "admin",
+			"password": "pass",
+			"mqtt_topic": "/users/",
+			"rights": "admin"
+		},
+		{
+			"login": "user",
+			"password": "pass",
+			"mqtt_topic": "/users/",
+			"rights": "user"
+		}
+	]
+}
+

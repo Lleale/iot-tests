@@ -1,0 +1,16 @@
+{
+    "host": "localhost",
+    "apiPort": 8071,
+    "startZwaySimulate": false,
+    "generateJUnitReport": false,
+    "logToFile": false,
+
+    "reportPath": "report",
+    "compressReport": true,
+    "reportArchivePath": "report.tar.xz",
+    "saveReportsInHistory": true,
+    "reportsHistoryPath": "oldReports",
+
+    "collectionPath": "../Collections/test.postman_collection.json",
+    "globalsPath": "../Environments/Workspace.postman_globals.json"
+}

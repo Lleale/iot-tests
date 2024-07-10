@@ -1,0 +1,75 @@
+#!/bin/bash
+stand_dir=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+
+export "${@:1}"
+
+echo "Cleaning up old cloned repository..."
+rm -rf "${stand_dir}/cloned"
+
+git config --global http.sslVerify false
+git clone https://gitlab-ci-token:${token}@gitlab.eltex.loc/iot-mcpe/iot-test-py.git -b ${branch} "${stand_dir}/cloned"
+
+if [ $? -ne 0 ]
+then
+  echo "[ERROR] Failed to clone repository with test files, aborting tests"
+  exit 1
+fi
+
+if [ ! -d "${stand_dir}/cloned/test-stand" ]
+then
+  echo "[WARNING] Test stand directory doesn't exist, skiping tests"
+  exit 0
+fi
+
+sudo chmod 777 "${stand_dir}/cloned"
+cd "${stand_dir}/cloned/test-stand"
+
+if [ ! -f "${stand_dir}/cloned/test-stand/js_start.mjs" ]
+then
+  echo "[ERROR] Test stand executable doesn't exist, aborting tests"
+  exit 1
+fi
+
+./install.sh --update
+if [ "$(jq '.dependencies["ts-node"]' package.json)" != "null" ]; then
+  export NODE_OPTIONS="--loader ts-node/esm"
+fi
+
+
+if [ "$mode" = "guard" ]; then
+  #Запуск тестового стенда c guard и сохранение его кода завершения
+  ./js_start.mjs --config "${stand_dir}/config_guard.json"
+  exit_code=$?
+  #Генерация покрытия API тестами в виде файла для Swagger
+  cd /home/cicd/postman-swagger-coverage
+  rm api-for-users
+  curl -k -O https://lab3-test.eltex.loc:8375/api/v1/v3/api-docs/api-for-users
+  unset NODE_OPTIONS
+  node index.mjs -s config.json > /dev/null
+fi
+
+if [ "$mode" = "test" ]; then
+  #Запуск тестового стенда (test) и сохранение его кода завершения
+  ./js_start.mjs --config "${stand_dir}/config.json"
+  exit_code=$?
+  #Генерация покрытия API тестами в виде файла для Swagger
+  cd /home/cicd/postman-swagger-coverage
+  rm api-for-users
+  curl -k -O https://lab3-test.eltex.loc:8375/api/v1/v3/api-docs/api-for-users
+  unset NODE_OPTIONS
+  node index.mjs -s config.json > /dev/null
+fi
+
+if [ "$mode" = "Ftest" ]; then
+  #Запуск тестового стенда c guard и сохранение его кода завершения
+  ./js_start.mjs --config "${stand_dir}/config_Ftest.json"
+  exit_code=$?
+  #Генерация покрытия API тестами в виде файла для Swagger
+  cd /home/cicd/postman-swagger-coverage
+  rm api-for-users
+  curl -k -O https://lab3-test.eltex.loc:8375/api/v1/v3/api-docs/api-for-users
+  unset NODE_OPTIONS
+  node index.mjs -s config.json > /dev/null
+fi
+
+exit $exit_code

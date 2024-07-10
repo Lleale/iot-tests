@@ -1,0 +1,630 @@
+{
+    "newCollectionName": "Охрана (через новое API)",
+    "replacements": [
+        {
+            "nameRegex": "(П|Повторная п)остановка дома на охрану$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                "",
+                                "postman.setEnvironmentVariable (\"current_time\", Date.now());"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 204\", function () {",
+                                "  pm.response.to.have.status(204);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                        "raw": "{{host}}/guard/devices/zone/arm?houseId={{house_id}}",
+                        "host": [
+                            "{{host}}"
+                        ],
+                        "path": [
+                            "guard",
+                            "devices",
+                            "zone",
+                            "arm"
+                        ],
+                        "query": [
+                            {
+                                "key": "houseId",
+                                "value": "{{house_id}}"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+
+        {
+            "nameRegex": "Снятие дома с охраны \\(без теста\\)",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                "",
+                                "postman.setEnvironmentVariable (\"current_time\", Date.now());"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                ""
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                        "raw": "{{host}}/guard/devices/zone/disarm?houseId={{house_id}}",
+                        "host": [
+                            "{{host}}"
+                        ],
+                        "path": [
+                            "guard",
+                            "devices",
+                            "zone",
+                            "disarm"
+                        ],
+                        "query": [
+                            {
+                                "key": "houseId",
+                                "value": "{{house_id}}"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+
+        {
+            "nameRegex": "Снятие дома с охраны$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                "",
+                                "postman.setEnvironmentVariable (\"current_time\", Date.now());"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 204\", function () {",
+                                "  pm.response.to.have.status(204);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                        "raw": "{{host}}/guard/devices/zone/disarm?houseId={{house_id}}",
+                        "host": [
+                            "{{host}}"
+                        ],
+                        "path": [
+                            "guard",
+                            "devices",
+                            "zone",
+                            "disarm"
+                        ],
+                        "query": [
+                            {
+                                "key": "houseId",
+                                "value": "{{house_id}}"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+        {
+            "nameRegex": "Перепостановка дома на охрану$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                "",
+                                "postman.setEnvironmentVariable (\"current_time\", Date.now());"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 204\", function () {",
+                                "  pm.response.to.have.status(204);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                        "raw": "{{host}}/guard/devices/zone/rearm?houseId={{house_id}}",
+                        "host": [
+                            "{{host}}"
+                        ],
+                        "path": [
+                            "guard",
+                            "devices",
+                            "zone",
+                            "rearm"
+                        ],
+                        "query": [
+                            {
+                                "key": "houseId",
+                                "value": "{{house_id}}"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+        {
+            "nameRegex": "Ожидание статуса \"Поставлено на охрану\"$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                ""
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200\", function () {",
+                                "  pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "{{websocket_proxy_host}}/await?timeFrom={{current_time}}&C_guardStatus.status=OK&C_underGuard=true&C_type=GUARD_STATUS_CHANGE",
+                        "host": [
+                            "{{websocket_proxy_host}}"
+                        ],
+                        "path": [
+                            "await"
+                        ],
+                        "query": [
+                            {
+                                "key": "timeFrom",
+                                "value": "{{current_time}}"
+                            },
+                            {
+                                "key": "C_guardStatus.status",
+                                "value": "OK"
+                            },
+                            {
+                                "key": "C_underGuard",
+                                "value": "true"
+                            },
+                            {
+                                "key": "C_type",
+                                "value": "GUARD_STATUS_CHANGE"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+        {
+            "nameRegex": "Ожидание статуса \"Не готов к постановке на охрану\"$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                ""
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200\", function () {",
+                                "  pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "{{websocket_proxy_host}}/await?timeFrom={{current_time}}&C_guardStatus.status=NOT_READY&C_underGuard=false&C_type=GUARD_STATUS_CHANGE",
+                        "host": [
+                            "{{websocket_proxy_host}}"
+                        ],
+                        "path": [
+                            "await"
+                        ],
+                        "query": [
+                            {
+                                "key": "timeFrom",
+                                "value": "{{current_time}}"
+                            },
+                            {
+                                "key": "C_guardStatus.status",
+                                "value": "NOT_READY"
+                            },
+                            {
+                                "key": "C_underGuard",
+                                "value": "false"
+                            },
+                            {
+                                "key": "C_type",
+                                "value": "GUARD_STATUS_CHANGE"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+        {
+            "nameRegex": "Ожидание статуса \"Снято с охраны\"$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                ""
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200\", function () {",
+                                "  pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "{{websocket_proxy_host}}/await?timeFrom={{current_time}}&C_guardStatus.status=INIT&C_underGuard=false&C_type=GUARD_STATUS_CHANGE",
+                        "host": [
+                            "{{websocket_proxy_host}}"
+                        ],
+                        "path": [
+                            "await"
+                        ],
+                        "query": [
+                            {
+                                "key": "timeFrom",
+                                "value": "{{current_time}}"
+                            },
+                            {
+                                "key": "C_guardStatus.status",
+                                "value": "INIT"
+                            },
+                            {
+                                "key": "C_underGuard",
+                                "value": "false"
+                            },
+                            {
+                                "key": "C_type",
+                                "value": "GUARD_STATUS_CHANGE"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+        {
+            "nameRegex": "Ожидание статуса \"Проникновение\"$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                ""
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200\", function () {",
+                                "  pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "{{websocket_proxy_host}}/await?timeFrom={{current_time}}&C_guardStatus.status=ALARM&C_underGuard=true&C_type=GUARD_STATUS_CHANGE",
+                        "host": [
+                            "{{websocket_proxy_host}}"
+                        ],
+                        "path": [
+                            "await"
+                        ],
+                        "query": [
+                            {
+                                "key": "timeFrom",
+                                "value": "{{current_time}}"
+                            },
+                            {
+                                "key": "C_guardStatus.status",
+                                "value": "ALARM"
+                            },
+                            {
+                                "key": "C_underGuard",
+                                "value": "true"
+                            },
+                            {
+                                "key": "C_type",
+                                "value": "GUARD_STATUS_CHANGE"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+        {
+            "nameRegex": "Ожидание статуса \"Ошибка постановки на охрану\"$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                ""
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200\", function () {",
+                                "  pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "{{websocket_proxy_host}}/await?timeFrom={{current_time}}&C_guardStatus.status=ERROR&C_underGuard=false&C_type=GUARD_STATUS_CHANGE",
+                        "host": [
+                            "{{websocket_proxy_host}}"
+                        ],
+                        "path": [
+                            "await"
+                        ],
+                        "query": [
+                            {
+                                "key": "timeFrom",
+                                "value": "{{current_time}}"
+                            },
+                            {
+                                "key": "C_guardStatus.status",
+                                "value": "ERROR"
+                            },
+                            {
+                                "key": "C_underGuard",
+                                "value": "false"
+                            },
+                            {
+                                "key": "C_type",
+                                "value": "GUARD_STATUS_CHANGE"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+        {
+            "nameRegex": "Ожидание статуса \"Ошибка охраны: потеряна связь с контроллером\"$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                ""
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200\", function () {",
+                                "  pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "{{websocket_proxy_host}}/await?timeFrom={{current_time}}&C_guardStatus.status=ERROR&C_guardStatus.message=Ошибка охраны: потеряна связь с хабом&C_underGuard=true&C_type=GUARD_STATUS_CHANGE",
+                        "host": [
+                            "{{websocket_proxy_host}}"
+                        ],
+                        "path": [
+                            "await"
+                        ],
+                        "query": [
+                            {
+                                "key": "timeFrom",
+                                "value": "{{current_time}}"
+                            },
+                            {
+                                "key": "C_guardStatus.status",
+                                "value": "ERROR"
+                            },
+                            {
+                                "key": "C_guardStatus.message",
+                                "value": "Ошибка охраны: потеряна связь с хабом"
+                            },
+                            {
+                                "key": "C_underGuard",
+                                "value": "true"
+                            },
+                            {
+                                "key": "C_type",
+                                "value": "GUARD_STATUS_CHANGE"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        },
+        {
+            "nameRegex": "Ожидание статуса \"Ошибка охраны: потеряна связь с устройством\"$",
+            "overrides": {
+                "event": [
+                    {
+                        "listen": "prerequest",
+                        "script": {
+                            "exec": [
+                                ""
+                            ],
+                            "type": "text/javascript"
+                        }
+                    },
+                    {
+                        "listen": "test",
+                        "script": {
+                            "exec": [
+                                "pm.test(\"Status code is 200\", function () {",
+                                "  pm.response.to.have.status(200);",
+                                "});"
+                            ],
+                            "type": "text/javascript"
+                        }
+                    }
+                ],
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "{{websocket_proxy_host}}/await?timeFrom={{current_time}}&C_guardStatus.status=ERROR&C_guardStatus.message=Устройство недоступно&C_underGuard=true&C_type=GUARD_STATUS_CHANGE",
+                        "host": [
+                            "{{websocket_proxy_host}}"
+                        ],
+                        "path": [
+                            "await"
+                        ],
+                        "query": [
+                            {
+                                "key": "timeFrom",
+                                "value": "{{current_time}}"
+                            },
+                            {
+                                "key": "C_guardStatus.status",
+                                "value": "ERROR"
+                            },
+                            {
+                                "key": "C_guardStatus.message",
+                                "value": "Устройство недоступно"
+                            },
+                            {
+                                "key": "C_underGuard",
+                                "value": "true"
+                            },
+                            {
+                                "key": "C_type",
+                                "value": "GUARD_STATUS_CHANGE"
+                            }
+                        ]
+                    }
+                },
+                "response": []
+            }
+        }
+    ]
+}

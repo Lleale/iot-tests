@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "commander": "^9.4.1",
+    "postman-collection": "^4.1.5"
+  },
+  "name": "postman-request-replacer",
+  "version": "1.0.0",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

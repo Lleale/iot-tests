@@ -1,0 +1,1 @@
+ffmpeg -avioflags direct -fflags nobuffer -rtsp_flags prefer_tcp -buffer_size 4194304 -stimeout 20000000 -analyzeduration 10000000 -probesize 20971520 -re -i {localtarget} -c:v copy -f flv -flvflags no_duration_filesize {location}
